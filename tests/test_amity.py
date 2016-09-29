@@ -21,12 +21,12 @@ class Amity_Test(unittest.TestCase):
         self.assertEqual(LivingSpace.objects.count, 1)
     
     def test_assign_room(self):
-        sam = Amity("Samuel Gaamuwa", "09/09/2000")
+        sam = Staff("Samuel Gaamuwa", "09/09/2000", "Operations", "Soldier")
         sam.save()
         self.assertIsNotNone(sam.allocated_office)
     
     def test_cant_assign_rooms_full(self):
-        sam = Amity("Samuel Gaamuwa", "09/09/2000")
+        sam = Staff("Samuel Gaamuwa", "09/09/2000", "Operations", "Soldier")
         result = sam.save()
         self.assertRaises("Can't assign room, all rooms full", result)
     
@@ -35,9 +35,6 @@ class Amity_Test(unittest.TestCase):
         steve.save()
         Amity.reallocate(steve.name, "Oculus")
         self.assertEqual(steve.allocated_office, "Oculus")
-    
-    def test_prints_allocations(self):
-        pass
     
     def test_saves_state(self):
         pass

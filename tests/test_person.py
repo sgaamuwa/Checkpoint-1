@@ -15,12 +15,13 @@ class Person_Test(unittest.TestCase):
         self.assertEqual(True, type(obj) is Person) 
     
     def test_adds_person(self):
-        sam = Person("Samuel Gaamuwa", "09/09/2000")
+        sam = Staff("Samuel Gaamuwa", "09/09/2000", "Facilities", "Coordinator")
         sam.save()
-        #assert Samuel Gaamuwa is in database
+        result = Person.search("Samuel")
+        self.assertIn("Samuel Gaamuwa", result)
     
     def test_requests_reallocation(self):
-        sam = Person("Samuel Gaamuwa", "09/09/2000")
+        sam = Staff("Samuel Gaamuwa", "09/09/2000", "Facilities", "Coordinator")
         sam.save()
         Person.request_reallocation(sam.name, "Narnia")
         self.assertEqual(sam.allocated_office, "Narnia")
