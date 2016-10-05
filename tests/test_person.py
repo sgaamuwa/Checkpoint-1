@@ -15,26 +15,65 @@ class Person_Test(unittest.TestCase):
         self.assertEqual(True, type(obj) is Person) 
     
     def test_adds_person(self):
-        sam = Person("Samuel Gaamuwa", "09/09/2000")
+        #test that a person is added to the system and database
+        sam = Staff("Samuel Gaamuwa", "09/09/2000", "Learning", "Sensei")
         sam.save()
-        #assert Samuel Gaamuwa is in database
+        isaac = Fellow("Isaac Dhibikirwa", "08/08/2001", 10, "D0")
+        isaac.save()
+        self.assertIsNotNone(database_return_staff("Samuel", "Gaamuwa"))
+        self.assertIsNotNone(database_return_fellow("Isaac", "Dhibikirwa"))
     
     def test_requests_reallocation(self):
-        sam = Person("Samuel Gaamuwa", "09/09/2000")
+        #test that a person can be reallocated to an office they request
+        #the reallocation request calls the reallocation function in Amity
+        Amity.create_room("Oculus", "office")
+
+        sam = Staff("Samuel Gaamuwa", "09/09/2000", "Learning", "Sensei")
         sam.save()
+
+        Amity.create_room("Narnia", "office")
+
         Person.request_reallocation(sam.name, "Narnia")
         self.assertEqual(sam.allocated_office, "Narnia")
     
     def test_refuses_reallocation_to_full_office(self):
-        sam = Person("Samuel Gaamuwa", "09/09/2000")
-        sam.save()
-        #populate valhala with people
+        #test that if a person requests reallocation to a full office it is denied
+        #create office and assign six people to it  
+        Amity.create_room("Valhala", "office")
+
+        kimani = Fellow("Kimani Ndegu", "08/08/2001", 9, "D1")
+        kimani.save()
+
+        ruth = Fellow("Ruth Ogendi", "07/07/2001", 9, "D1")
+        ruth.save()
+
+        migwi = Fellow("Migwi N'dugu", "06/06/2001", 9, "D1")
+        migwi.save()
+
+        mark = Staff("Mark Kawanguzi", "05/05/2001", "Operations", "Tosan")
+        mark.save()
+
+        tim = Staff("Timothy Isiko", "04/04/2001", "Success", "Taichou")
+        tim.save()
+
+        martha = Staff("Martha Kyozira", "03/03/2001", "Technology", "Shinobi")
+        martha.save()
+
+        Amity.create_room("Narnia", "office")
+
+        sam = Staff("Samuel Gaamuwa", "09/09/2000", "Learning", "Sensei")
+        #specify that sam is allocated to Narnia initially 
+        sam.allocated_office = "Narnia"
+
         request = Person.request_reallocation(sam.name, "Valhala")
         self.assertRaises("Can't reallocate, room is full", request)
     
     def test_prints_unallocated(self):
-        Person.print_unallocated()
-        #assert the contents of the print
+        #test that the prints unallocated prints unallocated people
+        sam =  Staff("Samuel Gaamuwa", "09/09/2000", "Learning", "Sensei")
+        sam.save()
+        result = Person.print_unallocated()
+        self.assertIn("Samuel Gaamuwa", result)
 
 if __name__ == '__main__':
     unittest.main()

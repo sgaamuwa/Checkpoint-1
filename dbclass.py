@@ -8,6 +8,26 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
+class Office(Base):
+    """Office Database class
+
+    This class defines database fields for the office record
+    """
+    __tablename__ = 'office'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(250), nullable=False)
+    current_occupants = Column(Integer, nullable=False)
+
+class LivingSpace(Base):
+    """Livingspace Database class
+
+    This class defines database fields for the livingspace record
+    """
+    __tablename__ = 'livingspace'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(250), nullable=False)
+    current_occupants = Column(Integer, nullable=False)
+
 class Staff(Base):
     """Staff Database class
 
@@ -37,26 +57,6 @@ class Fellow(Base):
     livingspace_id = Column(Integer, ForeignKey('livingspace.id'), nullable=True)
     office = relationship(Office)
     livingspace = relationship(LivingSpace)
-
-class Office(Base):
-    """Office Database class
-
-    This class defines database fields for the office record
-    """
-    __tablename__ = 'office'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(250), nullable=False)
-    current_occupants = Column(Integer, nullable=False)
-
-class LivingSpace(Base):
-    """Livingspace Database class
-
-    This class defines database fields for the livingspace record
-    """
-    __tablename__ = 'livingspace'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(250), nullable=False)
-    current_occupants = Column(Integer, nullable=False)
 
 engine = create_engine('sqlite:///amity_db')
 

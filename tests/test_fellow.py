@@ -15,6 +15,8 @@ class Fellow_Test(unittest.TestCase):
         self.assertEqual(True, type(obj) is Fellow) 
     
     def test_requests_livingspace(self):
+        #tests that a fellow can request for a living space
+        #the living space is then randomly assigned
         kimani = Fellow("Kimani Kim", "09/08/2000", 9, "D1")
         kimani.request_livingspace()
         self.assertIsNotNone(kimani.allocated_livingspace)
