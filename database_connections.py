@@ -17,21 +17,21 @@ DBSession = sessionmaker(bind=engine)
 
 session = DBSession()
 
-def database_insert_staff(fname, lname, dept, title, office_id):
+def database_insert_staff(fname, lname, office_id):
     """Insertion function
 
     This function inputs new staff into the database
     """
-    new_staff = Staff(first_name=fname, last_name=lname, department=dept, title=title, office_id=office_id)
+    new_staff = Staff(first_name=fname, last_name=lname)
     session.add(new_staff)
     session.commit()
 
-def database_insert_fellow(fname, lname, cohort, level, office_id, livingspace_id):
+def database_insert_fellow(fname, lname, office_id, livingspace_id):
     """Insertion function
 
     This function inputs new fellow into the database
     """
-    new_fellow = Fellow(first_name=fname, last_name=lname, cohort=cohort, level=level, office_id=office_id, livingspace_id=livingspace_id)
+    new_fellow = Fellow(first_name=fname, last_name=lname, office_id=office_id, livingspace_id=livingspace_id)
     session.add(new_fellow)
     session.commit()
 
@@ -133,7 +133,7 @@ def database_return_all_staff():
     rows = session.query(Staff).all()
     for row in rows:
         results.append((row.id, row.first_name, row.last_name,
-        row.department, row.title, row.office_id))
+        row.office_id))
     return results
 
 def database_return_all_fellows():
@@ -145,7 +145,7 @@ def database_return_all_fellows():
     rows = session.query(Fellow).all()
     for row in rows:
         results.append((row.id, row.first_name, row.last_name,
-        row.cohort, row.level, row.office_id, row.livingspace_id))
+        row.office_id, row.livingspace_id))
     return results
 
 def database_return_staff(fname, lname):
@@ -154,8 +154,7 @@ def database_return_staff(fname, lname):
     This function returns a specified staff member from the database
     """
     row = session.query(Staff).filter_by(first_name=fname, last_name=lname).first()
-    return (row.id, row.first_name, row.last_name, row.department, row.title,
-            row.office_id)
+    return (row.id, row.first_name, row.last_name, row.office_id)
 
 def database_return_fellow(fname, lname):
     """Retrieve function
@@ -163,8 +162,7 @@ def database_return_fellow(fname, lname):
     This function returns a specified fellow from the database
     """
     row = session.query(Fellow).filter_by(first_name=fname, last_name=lname).first()
-    return (row.id, row.first_name, row.last_name, row.cohort, row.level,
-            row.office_id, row.livingspace_id)
+    return (row.id, row.first_name, row.last_name, row.office_id, row.livingspace_id)
 
 def database_return_all_offices(name):
     """Retrieve function
