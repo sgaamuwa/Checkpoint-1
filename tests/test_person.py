@@ -6,19 +6,15 @@ class PersonTest(unittest.TestCase):
     def setup(self):
         pass
     
-    def test_instance_of(self):
-        obj = Person("name", "01/01/2016")
-        self.assertIsInstance(obj, Person)
-    
     def test_object_of(self):
-        obj = Person("name", "01/01/2016")
+        obj = Person("name")
         self.assertEqual(True, type(obj) is Person) 
     
     def test_adds_person(self):
         #test that a person is added to the system and database
-        sam = Staff("Samuel Gaamuwa", "09/09/2000", "Learning", "Sensei")
+        sam = Staff("Samuel Gaamuwa")
         sam.save()
-        isaac = Fellow("Isaac Dhibikirwa", "08/08/2001", 10, "D0")
+        isaac = Fellow("Isaac Dhibikirwa")
         isaac.save()
         self.assertIsNotNone(database_return_staff("Samuel", "Gaamuwa"))
         self.assertIsNotNone(database_return_fellow("Isaac", "Dhibikirwa"))
@@ -28,7 +24,7 @@ class PersonTest(unittest.TestCase):
         #the reallocation request calls the reallocation function in Amity
         Amity.create_room("Oculus", "office")
 
-        sam = Staff("Samuel Gaamuwa", "09/09/2000", "Learning", "Sensei")
+        sam = Staff("Samuel Gaamuwa")
         sam.save()
 
         Amity.create_room("Narnia", "office")
@@ -41,27 +37,27 @@ class PersonTest(unittest.TestCase):
         #create office and assign six people to it  
         Amity.create_room("Valhala", "office")
 
-        kimani = Fellow("Kimani Ndegu", "08/08/2001", 9, "D1")
+        kimani = Fellow("Kimani Ndegu")
         kimani.save()
 
-        ruth = Fellow("Ruth Ogendi", "07/07/2001", 9, "D1")
+        ruth = Fellow("Ruth Ogendi")
         ruth.save()
 
-        migwi = Fellow("Migwi N'dugu", "06/06/2001", 9, "D1")
+        migwi = Fellow("Migwi N'dugu")
         migwi.save()
 
-        mark = Staff("Mark Kawanguzi", "05/05/2001", "Operations", "Tosan")
+        mark = Staff("Mark Kawanguzi")
         mark.save()
 
-        tim = Staff("Timothy Isiko", "04/04/2001", "Success", "Taichou")
+        tim = Staff("Timothy Isiko")
         tim.save()
 
-        martha = Staff("Martha Kyozira", "03/03/2001", "Technology", "Shinobi")
+        martha = Staff("Martha Kyozira")
         martha.save()
 
         Amity.create_room("Narnia", "office")
 
-        sam = Staff("Samuel Gaamuwa", "09/09/2000", "Learning", "Sensei")
+        sam = Staff("Samuel Gaamuwa")
         #specify that sam is allocated to Narnia initially 
         sam.allocated_office = "Narnia"
 
@@ -70,7 +66,7 @@ class PersonTest(unittest.TestCase):
     
     def test_prints_unallocated(self):
         #test that the unallocated people are printed
-        sam =  Staff("Samuel Gaamuwa", "09/09/2000", "Learning", "Sensei")
+        sam =  Staff("Samuel Gaamuwa")
         sam.save()
         result = Person.print_unallocated()
         self.assertIn("Samuel Gaamuwa", result)

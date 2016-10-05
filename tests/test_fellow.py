@@ -6,18 +6,14 @@ class FellowTest(unittest.TestCase):
     def setup(self):
         pass
     
-    def test_instance_of(self):
-        obj = Fellow("name", "01/01/2000", 1, "D0")
-        self.assertIsInstance(obj, Fellow) 
-    
     def test_object_of(self):
-        obj = Fellow("name", "01/01/2000", 1, "D0")
+        obj = Fellow("name")
         self.assertEqual(True, type(obj) is Fellow) 
     
     def test_requests_livingspace(self):
         #tests that a fellow can request for a living space
         #the living space is then randomly assigned
-        kimani = Fellow("Kimani Kim", "09/08/2000", 9, "D1")
+        kimani = Fellow("Kimani Kim")
         kimani.request_livingspace()
         self.assertIsNotNone(kimani.allocated_livingspace)
 
