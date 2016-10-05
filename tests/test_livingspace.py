@@ -7,11 +7,11 @@ class LivingSpace_Test(unittest.TestCase):
         pass
     
     def test_instance_of(self):
-        obj = LivingSpace()
+        obj = LivingSpace("name")
         self.assertIsInstance(obj, LivingSpace)
     
     def test_object_of(self):
-        obj = LivingSpace()
+        obj = LivingSpace("name")
         self.assertEqual(True, type(obj) is LivingSpace)
 
 if __name__ == '__main__':

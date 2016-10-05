@@ -7,11 +7,11 @@ class Office_Test(unittest.TestCase):
         pass
     
     def test_instance_of(self):
-        obj = Office()
+        obj = Office("name")
         self.assertIsInstance(obj, Office)
     
     def test_object_of(self):
-        obj = Office()
+        obj = Office("name")
         self.assertEqual(True, type(obj) is Office)
 
 
