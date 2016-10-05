@@ -7,11 +7,11 @@ class Room_Test(unittest.TestCase):
         pass
     
     def test_instance_of(self):
-        obj = Room()
+        obj = Room("name")
         self.assertIsInstance(obj, Room)
     
     def test_object_of(self):
-        obj = Room()
+        obj = Room("name")
         self.assertEqual(True, type(obj) is Room)
 
     def test_can_search_room(self):

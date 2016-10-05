@@ -1,7 +1,8 @@
+import os.path
 import unittest
 
 
-class Amity_Test(unittest.TestCase):
+class AmityTest(unittest.TestCase):
     
     def setup(self):
         pass
@@ -79,13 +80,20 @@ class Amity_Test(unittest.TestCase):
     
     def test_saves_state(self):
         #test that information can be stored in a new specified database
-        pass
+        Amity.save_state("new_database")
+        self.assertTrue(os.path.isfile("../new_database"))
     
     def test_loads_state(self):
         #test that it loads data from specified database
         Amity.load_state("new_rooms_db")
         self.assertIn("Valhala", Amity.print_allocations())
         self.assertIn("Hogwarts", Amity.print_allocations())
+
+    def test_loads_people(self):
+        #test that it loads people from a specified file and allocates them rooms
+        Amity.load_people("new_people")
+        self.assertIn("Samuel Gaamuwa", Amity.print_allocations())
+        self.assertIn("Isaac Dhibikirwa", Amity.print_allocations())
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,17 +1,17 @@
 import unittest
 
 
-class Fellow_Test(unittest.TestCase):
+class FellowTest(unittest.TestCase):
     
     def setup(self):
         pass
     
     def test_instance_of(self):
-        obj = Fellow()
+        obj = Fellow("name", "01/01/2000", 1, "D0")
         self.assertIsInstance(obj, Fellow) 
     
     def test_object_of(self):
-        obj = Fellow()
+        obj = Fellow("name", "01/01/2000", 1, "D0")
         self.assertEqual(True, type(obj) is Fellow) 
     
     def test_requests_livingspace(self):

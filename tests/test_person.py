@@ -1,7 +1,7 @@
 import unittest
 
 
-class Person_Test(unittest.TestCase):
+class PersonTest(unittest.TestCase):
 
     def setup(self):
         pass
@@ -69,7 +69,7 @@ class Person_Test(unittest.TestCase):
         self.assertRaises("Can't reallocate, room is full", request)
     
     def test_prints_unallocated(self):
-        #test that the prints unallocated prints unallocated people
+        #test that the unallocated people are printed
         sam =  Staff("Samuel Gaamuwa", "09/09/2000", "Learning", "Sensei")
         sam.save()
         result = Person.print_unallocated()
