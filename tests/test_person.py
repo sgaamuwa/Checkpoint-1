@@ -1,5 +1,8 @@
 import unittest
 
+from buildings.amity import Amity
+from people.fellow import Fellow
+from people.staff import Staff
 from database.database_connections import database_return_staff
 from database.database_connections import database_return_fellow
 

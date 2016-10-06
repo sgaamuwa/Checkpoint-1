@@ -1,5 +1,8 @@
 import unittest
 
+from rooms.room import Room
+from buildings.amity import Amity
+
 
 class RoomTest(unittest.TestCase):
     

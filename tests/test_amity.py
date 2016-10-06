@@ -1,6 +1,10 @@
 import os.path
 import unittest
 
+from buildings.amity import Amity
+from people.fellow import Fellow
+from people.person import Person
+from people.staff import Staff
 
 class AmityTest(unittest.TestCase):
     
