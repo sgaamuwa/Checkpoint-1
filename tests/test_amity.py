@@ -70,6 +70,16 @@ class AmityTest(unittest.TestCase):
         Amity.reallocate(steve, "Oculus")
         self.assertEqual(steve.allocated_office, "Oculus")
     
+    def test_refuses_reallocation_to_non_existent_office(self):
+        #tests it does not allocate to non existent room
+        Amity.create_room("Oculus", "office")
+
+        sam = Staff("Samuel Gaamuwa")
+        sam.save()
+
+        request = Amity.reallocate(sam, "Narnia")
+        self.assertEqual("Room Narnia does not exist", result)
+    
     def test_prints_allocations(self):
         #test it prints rooms and those allocated to them
         Amity.create_room("Oculus", "office")
