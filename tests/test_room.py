@@ -20,14 +20,6 @@ class RoomTest(unittest.TestCase):
         Amity.create_room("Oculus", "office")
         result = Room.search("Oculus")
         self.assertIn("ROOM: Oculus\nTYPE: office", result)
-
-    def test_prints_allocations(self):
-        Amity.create_room("Oculus", "office")
-        sam = Staff("Samuel Gaamuwa")
-        kimani = Fellow("Kimani Ndegu")
-        arnold = Fellow("Arnold Okoth")
-        self.assertIn("Oculus", Room.print_allocations())
-        self.assertIn("Samuel Gaamuwa", Room.print_allocations())
     
 
 if __name__ == '__main__':

@@ -9,8 +9,8 @@ class Room(object):
     def __init__(self, name):
         self.name = name
 
+    def save(self):
+        pass
+
     def search(name):
         return ""
-
-    def print_allocations():
-        return "" 

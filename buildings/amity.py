@@ -1,5 +1,7 @@
 import os 
 
+from rooms.office import Office
+from rooms.livingspace import LivingSpace
 
 class Amity(object):
 
@@ -7,7 +9,12 @@ class Amity(object):
         pass 
 
     def create_room(name, type):
-        pass 
+        if type = "office":
+            room = Office(name)
+            room.save()
+        elif type ="livingspace":
+            room = LivingSpace(name)
+            room.save()
 
     def assign_room(person):
         return "" 
