@@ -28,7 +28,7 @@ class AmityTest(unittest.TestCase):
     def test_assign_room(self):
         #test that new people are actually assigned rooms 
         Amity.create_room("Oculus", "office")
-        sam = Staff("Samuel Gaamuwa")
+        sam = Staff("Samuel", "Gaamuwa")
         Amity.assign_room(sam)
         self.assertIsNotNone(sam.allocated_office)
     
@@ -37,25 +37,25 @@ class AmityTest(unittest.TestCase):
         #the save function in person automatically calls the assign room function 
         Amity.create_room("Oculus", "office")
 
-        kimani = Fellow("Kimani Ndegu")
+        kimani = Fellow("Kimani", "Ndegu")
         kimani.save()
 
-        ruth = Fellow("Ruth Ogendi")
+        ruth = Fellow("Ruth", "Ogendi")
         ruth.save()
 
-        migwi = Fellow("Migwi N'dugu")
+        migwi = Fellow("Migwi", "N'dugu")
         migwi.save()
 
-        mark = Staff("Mark Kawanguzi")
+        mark = Staff("Mark", "Kawanguzi")
         mark.save()
 
-        tim = Staff("Timothy Isiko")
+        tim = Staff("Timothy", "Isiko")
         tim.save()
 
-        martha = Staff("Martha Kyozira")
+        martha = Staff("Martha", "Kyozira")
         martha.save()
 
-        sam = Staff("Samuel Gaamuwa")
+        sam = Staff("Samue", "Gaamuwa")
         result = Amity.assign_room(sam)
         self.assertEqual("Can't assign room, all rooms full", result)
     
@@ -63,7 +63,7 @@ class AmityTest(unittest.TestCase):
         #tests that people are reallocated to requested rooms 
         Amity.create_room("Narnia", "office")
 
-        steve = Staff("Steve Njoro")
+        steve = Staff("Steve", "Njoro")
         steve.save()
 
         Amity.create_room("Oculus", "office")
@@ -74,7 +74,7 @@ class AmityTest(unittest.TestCase):
         #tests it does not allocate to non existent room
         Amity.create_room("Oculus", "office")
 
-        sam = Staff("Samuel Gaamuwa")
+        sam = Staff("Samuel", "Gaamuwa")
         sam.save()
 
         request = Amity.reallocate(sam, "Narnia")
@@ -84,7 +84,7 @@ class AmityTest(unittest.TestCase):
         #test it prints rooms and those allocated to them
         Amity.create_room("Oculus", "office")
 
-        sam = Staff("Samuel Gaamuwa")
+        sam = Staff("Samuel", "Gaamuwa")
 
         Amity.assign_room(sam)
         self.assertIn("Oculus", Amity.print_allocations())

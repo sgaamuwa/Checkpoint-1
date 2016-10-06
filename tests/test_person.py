@@ -19,9 +19,9 @@ class PersonTest(unittest.TestCase):
     
     def test_adds_person(self):
         #test that a person is added to the system and database
-        sam = Staff("Samuel Gaamuwa")
+        sam = Staff("Samuel", "Gaamuwa")
         sam.save()
-        isaac = Fellow("Isaac Dhibikirwa")
+        isaac = Fellow("Isaac", "Dhibikirwa")
         isaac.save()
         self.assertIsNotNone(database_return_staff("Samuel", "Gaamuwa"))
         self.assertIsNotNone(database_return_fellow("Isaac", "Dhibikirwa"))
@@ -31,7 +31,7 @@ class PersonTest(unittest.TestCase):
         #the reallocation request calls the reallocation function in Amity
         Amity.create_room("Oculus", "office")
 
-        sam = Staff("Samuel Gaamuwa")
+        sam = Staff("Samuel", "Gaamuwa")
         sam.save()
 
         Amity.create_room("Narnia", "office")
@@ -44,27 +44,27 @@ class PersonTest(unittest.TestCase):
         #create office and assign six people to it  
         Amity.create_room("Valhala", "office")
 
-        kimani = Fellow("Kimani Ndegu")
+        kimani = Fellow("Kimani", "Ndegu")
         kimani.save()
 
-        ruth = Fellow("Ruth Ogendi")
+        ruth = Fellow("Ruth", "Ogendi")
         ruth.save()
 
-        migwi = Fellow("Migwi N'dugu")
+        migwi = Fellow("Migwi", "N'dugu")
         migwi.save()
 
-        mark = Staff("Mark Kawanguzi")
+        mark = Staff("Mark", "Kawanguzi")
         mark.save()
 
-        tim = Staff("Timothy Isiko")
+        tim = Staff("Timothy", "Isiko")
         tim.save()
 
-        martha = Staff("Martha Kyozira")
+        martha = Staff("Martha", "Kyozira")
         martha.save()
 
         Amity.create_room("Narnia", "office")
 
-        sam = Staff("Samuel Gaamuwa")
+        sam = Staff("Samuel", "Gaamuwa")
         #specify that sam is allocated to Narnia initially 
         sam.allocated_office = "Narnia"
 
@@ -73,10 +73,10 @@ class PersonTest(unittest.TestCase):
     
     def test_prints_unallocated(self):
         #test that the unallocated people are printed
-        sam =  Staff("Samuel Gaamuwa")
+        sam =  Staff("Samuel", "Gaamuwa")
         sam.save()
         result = Person.print_unallocated()
-        self.assertIn("Samuel Gaamuwa", result)
+        self.assertIn("Samuel", "Gaamuwa", result)
 
 if __name__ == '__main__':
     unittest.main()
