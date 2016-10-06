@@ -2,6 +2,7 @@ import unittest
 
 from buildings.amity import Amity
 from people.fellow import Fellow
+from people.person import Person
 from people.staff import Staff
 from database.database_connections import database_return_staff
 from database.database_connections import database_return_fellow
@@ -68,7 +69,7 @@ class PersonTest(unittest.TestCase):
         sam.allocated_office = "Narnia"
 
         request = Person.request_reallocation(sam.name, "Valhala")
-        self.assertRaises("Can't reallocate, room is full", request)
+        self.assertEqual("Can't reallocate, room is full", request)
     
     def test_prints_unallocated(self):
         #test that the unallocated people are printed

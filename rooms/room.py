@@ -10,7 +10,7 @@ class Room(object):
         self.name = name
 
     def search(name):
-        pass 
+        return ""
 
     def print_allocations():
-        pass 
+        return "" 

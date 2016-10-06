@@ -2,6 +2,8 @@ from people.person import Person
 
 class Fellow(Person):
 
-    def request_livingspace():
+    allocated_livingspace = ""
+    
+    def request_livingspace(self):
         pass
         

@@ -3,14 +3,16 @@ import os
 
 class Person(object):
 
+    allocated_office = ""
+
     def __init__(self, name):
         self.name = name
     
-    def save():
+    def save(self):
         pass 
 
     def request_reallocation(name, room):
-        pass
+        return ""
 
     def print_unallocated():
-        pass 
+        return "" 

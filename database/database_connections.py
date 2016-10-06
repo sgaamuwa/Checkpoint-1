@@ -2,10 +2,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-from dbclass import Staff 
-from dbclass import Fellow 
-from dbclass import Office
-from dbclass import LivingSpace
+from database.dbclass import Staff 
+from database.dbclass import Fellow 
+from database.dbclass import Office
+from database.dbclass import LivingSpace
 
 engine = create_engine('sqlite:///amity_db')
 
@@ -154,7 +154,10 @@ def database_return_staff(fname, lname):
     This function returns a specified staff member from the database
     """
     row = session.query(Staff).filter_by(first_name=fname, last_name=lname).first()
-    return (row.id, row.first_name, row.last_name, row.office_id)
+    if row is not None:
+        return (row.id, row.first_name, row.last_name, row.office_id)
+    else:
+        return "Does Not Exist"
 
 def database_return_fellow(fname, lname):
     """Retrieve function
@@ -162,7 +165,10 @@ def database_return_fellow(fname, lname):
     This function returns a specified fellow from the database
     """
     row = session.query(Fellow).filter_by(first_name=fname, last_name=lname).first()
-    return (row.id, row.first_name, row.last_name, row.office_id, row.livingspace_id)
+    if row is not None:
+        return (row.id, row.first_name, row.last_name, row.office_id, row.livingspace_id)
+    else:
+        return "Does Not Exist"
 
 def database_return_all_offices(name):
     """Retrieve function
@@ -191,17 +197,19 @@ def database_return_office(name):
 
     This function returns a specified office from the database
     """
-    row = session.query(Staff).filter_by(name=name).first()
-    return (row.id, row.name, row.current_occupants)
+    row = session.query(Office).filter_by(name=name).first()
+    if row is not None:
+        return (row.id, row.name, row.current_occupants)
+    else:
+        return "Does not exist"
 
-def database_return_livingspace(fname, lname):
+def database_return_livingspace(name):
     """Retrieve function
 
     This function returns a specified livingspace from the database
     """
-    row = session.query(Staff).filter_by(name=name).first()
-    return (row.id, row.name, row.current_occupants)
-
-print(database_return_fellow())
-database_update_fellow("Samuel", "Gaamuwa", "narnia")
-print(database_return_fellow())
+    row = session.query(LivingSpace).filter_by(name=name).first()
+    if row is not None:
+        return (row.id, row.name, row.current_occupants)
+    else:
+        return "Does not exist"

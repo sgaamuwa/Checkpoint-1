@@ -1,6 +1,8 @@
 import unittest
 
 from rooms.room import Room
+from people.staff import Staff
+from people.fellow import Fellow
 from buildings.amity import Amity
 
 

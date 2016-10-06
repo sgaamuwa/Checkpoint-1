@@ -5,6 +5,8 @@ from buildings.amity import Amity
 from people.fellow import Fellow
 from people.person import Person
 from people.staff import Staff
+from database.database_connections import database_return_office
+from database.database_connections import database_return_livingspace
 
 class AmityTest(unittest.TestCase):
     
@@ -55,7 +57,7 @@ class AmityTest(unittest.TestCase):
 
         sam = Staff("Samuel Gaamuwa")
         result = Amity.assign_room(sam)
-        self.assertRaises("Can't assign room, all rooms full", result)
+        self.assertEqual("Can't assign room, all rooms full", result)
     
     def test_reallocates_person(self):
         #tests that people are reallocated to requested rooms 

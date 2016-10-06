@@ -10,13 +10,13 @@ class Amity(object):
         pass 
 
     def assign_room(person):
-        pass 
+        return "" 
 
     def reallocate(person, room):
         pass
 
     def print_allocations():
-        pass 
+        return "" 
 
     def save_state(database):
         pass 
