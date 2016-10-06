@@ -61,7 +61,7 @@ class AmityTest(unittest.TestCase):
         steve.save()
 
         Amity.create_room("Oculus", "office")
-        Amity.reallocate(steve.name, "Oculus")
+        Amity.reallocate(steve, "Oculus")
         self.assertEqual(steve.allocated_office, "Oculus")
     
     def test_prints_allocations(self):

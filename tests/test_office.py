@@ -1,7 +1,9 @@
 import unittest
 
+from rooms.office import Office
 
-class Office_Test(unittest.TestCase):
+
+class OfficeTest(unittest.TestCase):
     
     def setup(self):
         pass

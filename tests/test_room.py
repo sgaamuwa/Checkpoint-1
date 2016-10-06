@@ -1,7 +1,7 @@
 import unittest
 
 
-class Room_Test(unittest.TestCase):
+class RoomTest(unittest.TestCase):
     
     def setup(self):
         pass
@@ -21,8 +21,8 @@ class Room_Test(unittest.TestCase):
         sam = Staff("Samuel Gaamuwa")
         kimani = Fellow("Kimani Ndegu")
         arnold = Fellow("Arnold Okoth")
-        self.assertIn("Oculus", Room.print_allocations)
-        self.assertIn("Samuel Gaamuwa", Room.print_allocations)
+        self.assertIn("Oculus", Room.print_allocations())
+        self.assertIn("Samuel Gaamuwa", Room.print_allocations())
     
 
 if __name__ == '__main__':

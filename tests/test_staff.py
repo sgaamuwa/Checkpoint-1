@@ -1,7 +1,9 @@
 import unittest
 
+from people.staff import Staff
 
-class Staff_Test(unittest.TestCase):
+
+class StaffTest(unittest.TestCase):
     
     def setup(self):
         pass

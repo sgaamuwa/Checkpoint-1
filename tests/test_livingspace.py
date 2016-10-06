@@ -1,7 +1,9 @@
 import unittest
 
+from rooms.livingspace import LivingSpace
 
-class LivingSpace_Test(unittest.TestCase):
+
+class LivingSpaceTest(unittest.TestCase):
     
     def setup(self):
         pass
