@@ -6,7 +6,7 @@ class Person(object):
     def __init__(self, name):
         self.name = name
     
-    def add_person(name):
+    def save():
         pass 
 
     def request_reallocation(name, room):

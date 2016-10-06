@@ -1,5 +1,8 @@
 import unittest
 
+from database.database_connections import database_return_staff
+from database.database_connections import database_return_fellow
+
 
 class PersonTest(unittest.TestCase):
 
