@@ -5,14 +5,19 @@ from rooms.livingspace import LivingSpace
 
 class Amity(object):
 
+    offices = {}
+    staff = {}
+    fellows = {}
+    livingspaces = {}
+
     def __init__(self):
         pass 
 
     def create_room(name, type):
-        if type = "office":
+        if type == "office":
             room = Office(name)
             room.save()
-        elif type ="livingspace":
+        elif type == "livingspace":
             room = LivingSpace(name)
             room.save()
 

@@ -8,7 +8,7 @@ class FellowTest(unittest.TestCase):
         pass
     
     def test_object_of(self):
-        obj = Fellow("name")
+        obj = Fellow("fname", "lname")
         self.assertEqual(True, type(obj) is Fellow) 
     
     def test_requests_livingspace(self):

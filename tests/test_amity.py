@@ -38,22 +38,22 @@ class AmityTest(unittest.TestCase):
         Amity.create_room("Oculus", "office")
 
         kimani = Fellow("Kimani", "Ndegu")
-        kimani.save()
+        Amity.assign_room(kimani)
 
         ruth = Fellow("Ruth", "Ogendi")
-        ruth.save()
+        Amity.assign_room(ruth)
 
         migwi = Fellow("Migwi", "N'dugu")
-        migwi.save()
+        Amity.assign_room(migwi)
 
         mark = Staff("Mark", "Kawanguzi")
-        mark.save()
+        Amity.assign_room(mark)
 
         tim = Staff("Timothy", "Isiko")
-        tim.save()
+        Amity.assign_room(tim)
 
         martha = Staff("Martha", "Kyozira")
-        martha.save()
+        Amity.assign_room(martha)
 
         sam = Staff("Samue", "Gaamuwa")
         result = Amity.assign_room(sam)
@@ -64,7 +64,7 @@ class AmityTest(unittest.TestCase):
         Amity.create_room("Narnia", "office")
 
         steve = Staff("Steve", "Njoro")
-        steve.save()
+        Amity.assign_room(steve)
 
         Amity.create_room("Oculus", "office")
         Amity.reallocate(steve, "Oculus")
@@ -75,10 +75,10 @@ class AmityTest(unittest.TestCase):
         Amity.create_room("Oculus", "office")
 
         sam = Staff("Samuel", "Gaamuwa")
-        sam.save()
+        Amity.assign_room(sam)
 
         request = Amity.reallocate(sam, "Narnia")
-        self.assertEqual("Room Narnia does not exist", result)
+        self.assertEqual("Room Narnia does not exist", request)
     
     def test_prints_allocations(self):
         #test it prints rooms and those allocated to them

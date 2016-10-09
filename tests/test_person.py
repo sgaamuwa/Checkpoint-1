@@ -14,7 +14,7 @@ class PersonTest(unittest.TestCase):
         pass
     
     def test_object_of(self):
-        obj = Person("name")
+        obj = Person("fname", "lname")
         self.assertEqual(True, type(obj) is Person) 
     
     def test_adds_person(self):
@@ -36,7 +36,7 @@ class PersonTest(unittest.TestCase):
 
         Amity.create_room("Narnia", "office")
 
-        Person.request_reallocation(sam.name, "Narnia")
+        Person.request_reallocation(sam.first_name, "Narnia")
         self.assertEqual(sam.allocated_office, "Narnia")
     
     def test_refuses_reallocation_to_full_office(self):
@@ -68,7 +68,7 @@ class PersonTest(unittest.TestCase):
         #specify that sam is allocated to Narnia initially 
         sam.allocated_office = "Narnia"
 
-        request = Person.request_reallocation(sam.name, "Valhala")
+        request = Person.request_reallocation(sam.first_name, "Valhala")
         self.assertEqual("Can't reallocate, room is full", request)
     
     def test_prints_unallocated(self):

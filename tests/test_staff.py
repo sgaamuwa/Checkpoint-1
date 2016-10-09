@@ -9,7 +9,7 @@ class StaffTest(unittest.TestCase):
         pass
     
     def test_object_of(self):
-        obj = Staff("name")
+        obj = Staff("fname", "lname")
         self.assertEqual(True, type(obj) is Staff) 
 
 
