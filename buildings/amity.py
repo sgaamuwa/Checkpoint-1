@@ -5,11 +5,7 @@ from rooms.office import Office
 from rooms.livingspace import LivingSpace
 from people.fellow import Fellow
 from people.staff import Staff
-from database.database_connections.DatabaseConnections import (database_return_office, 
-    database_update_fellow, database_update_staff, 
-    database_update_office, set_database,
-    database_return_all_fellows, database_return_all_staff, 
-    database_return_all_livingspaces, database_return_all_offices)
+from database.database_connections import DatabaseConnections
 
 class Amity(object):
 
@@ -26,23 +22,23 @@ class Amity(object):
         """creates a room depending on the type specified"""
         #create room object respectively
         if kind == "office":
-            room = Office(name)
+            room = Office(name, room_id)
             Amity.offices[room_id] = room
         elif kind == "livingspace":
-            room = LivingSpace(name)
+            room = LivingSpace(name, room_id)
             Amity.livingspaces[room_id] = room
 
-    def add_person(fname, lname, staff_id, type):
+    def add_person(fname, lname, staff_id, title):
         """creates a new person basing on their specified type"""
 
-        if type == "FELLOW":
+        if title == "FELLOW":
             person = Fellow(fname, lname, staff_id)
             Amity.assign_room(person)
-            fellows[staff_id] = person
-        if type == "STAFF":
+            Amity.fellows[staff_id] = person
+        if title == "STAFF":
             person = Staff(fname, lname, staff_id)
             Amity.assign_room(person)
-            staff[staff_id] = person
+            Amity.staff[staff_id] = person
         
         return "{} {} allocated to {}".format(person.first_name, person.last_name,
                                                 person.allocated_office)
@@ -54,7 +50,7 @@ class Amity(object):
             return "There are no rooms"
         available_offices = []
         for office in Amity.offices.values():
-            if room.current_occupants < 6:
+            if office.current_occupants < 6:
                 available_offices.append(office)
         #if there are no free rooms
         if len(available_offices) == 0:
@@ -62,6 +58,8 @@ class Amity(object):
         else:
             random_office = available_offices[random.randint(0, (len(available_offices) - 1))]
         person.allocated_office = random_office.room_id
+        random_office.current_occupants += 1
+        Amity.offices[random_office.room_id] = random_office
 
     def reallocate(person, room_name):
         """assigns a person to the specified room if it is free"""
@@ -75,11 +73,21 @@ class Amity(object):
             return "The room is full"
         person.allocated_office = office.room_id
         office.current_occupants += 1
-        return person
 
     def print_allocations():
         """returns a printout of all rooms and persons assigned to them"""
         return "" 
+    
+    def print_unallocated():
+        """returns a list of all the unallocated staff members"""
+        unallocated = []
+        #add the unallocated to a list
+        for person in Amity.staff.values():
+            if person.allocated_office == "":
+                unallocated.append(person.first_name + person.last_name)
+        for person in Amity.fellows.values():
+            if person.allocated_office == "":
+                unallocated.append(person.first_name + person.last_name)
 
     def save_state(database):
         """saves current system data in a specified database"""
@@ -89,15 +97,23 @@ class Amity(object):
         """loads data from a specified database into the system"""
         if database is not None:
             set_database(database)
-        for row in database_return_all_offices:
-           Amity.rooms
-        for row in database_return_all_livingspaces:
-            Amity.rooms.append({row.name : row})
-        for row in database_return_all_fellows:
-            Amity.people.append({row.staff_id : row})
-        for row in database_return_all_staff:
-            Amity.people.append({row.staff_id : row})
+        for row in DatabaseConnections.database_return_all_offices:
+            Amity.offices[row.room_id] = row
+        for row in DatabaseConnections.database_return_all_livingspaces:
+            Amity.livingspaces[row.room_id] = row
+        for row in DatabaseConnections.database_return_all_fellows:
+            Amity.fellows[row.staff_id] = row
+        for row in DatabaseConnections.database_return_all_staff:
+            Amity.staff[row.staff_id] = row 
 
     def load_people(filename):
         """loads people into the system from specified file"""
         pass 
+
+print(len(Amity.fellows))
+Amity.create_room("Oculus", "RO-01", "office")
+print(Amity.add_person("Samuel", "Gaamuwa", "DS-01", "FELLOW"))
+Amity.create_room("Narnia", "RO-02", "office")
+print(Amity.reallocate(Amity.fellows["DS-01"], "Narnia"))
+print(Amity.fellows["DS-01"].allocated_office)
+print(len(Amity.fellows))
