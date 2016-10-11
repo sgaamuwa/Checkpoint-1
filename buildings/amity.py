@@ -50,19 +50,18 @@ class Amity(object):
         fellow.allocated_livingspace = livingspace
         fellow.allocated_office = office
         Amity.fellows[fellow.staff_id] = fellow
-        if office is not None:
+        if office is not "" and office is not None:
             Amity.offices[office].current_occupants.append(fname+" "+lname)
-        if livingspace is not None:
+        if livingspace is not "" and livingspace is not None:
             Amity.livingspaces[livingspace].current_occupants.append(fname+" "+lname)
 
     def add_staff_from_database(fname, lname, office=None):
         """adds a fellow from the database to the working dataset"""
 
         staff = Staff(fname, lname)
-        staff.allocated_livingspace = livingspace
         staff.allocated_office = office
         Amity.staff[staff.staff_id] = staff
-        if office is not None:
+        if office is not "" and office is not None:
             Amity.offices[office].current_occupants.append(fname+" "+lname)
 
     def assign_room(person):
@@ -196,8 +195,16 @@ class Amity(object):
     def load_state(database):
         """loads data from a specified database into the system"""
         database = DatabaseConnections(database)
-        print(database.database_return_all_offices)
-        
+        for office in database.database_return_all_offices():
+            Amity.create_room(office, "office")
+        for livingspace in database.database_return_all_livingspaces():
+            print(livingspace)
+            Amity.create_room(livingspace, "livingspace")
+            print(Amity.livingspaces)
+        for person in database.database_return_all_fellows():
+            Amity.add_fellow_from_database(person[0], person[1], person[2], person[3])
+        for person in database.database_return_all_staff():
+            Amity.add_staff_from_database(person[0], person[1], person[2])
 
     def load_people(filename):
         """loads people into the system from specified file"""
@@ -217,5 +224,4 @@ class Amity(object):
 
 Amity.load_state("amity_db")
 Amity.print_allocations()
-
 

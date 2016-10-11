@@ -133,10 +133,11 @@ class DatabaseConnections(object):
         results = []
         rows = self.session.query(Fellow).all()
         for row in rows:
-            results.append(row)
+            results.append((row.first_name, row.last_name,
+            row.allocated_office, row.allocated_livingspace))
         return results
 
-    def database_return_all_offices(self, name):
+    def database_return_all_offices(self):
         """Retrieve function
 
         This function returns all offices in the database
@@ -145,15 +146,16 @@ class DatabaseConnections(object):
         rows = self.session.query(Office).all()
         for row in rows:
             results.append((row.name))
-        return results
+        print (results)
+        return (results)
 
-    def database_return_all_livingspaces(self, name):
+    def database_return_all_livingspaces(self):
         """Retrieve function
 
         This function returns all livingspaces in the database
         """
         results = []
-        rows = self.session.query(Office).all()
+        rows = self.session.query(LivingSpace).all()
         for row in rows:
             results.append((row.name))
         return results
