@@ -151,9 +151,12 @@ class Amity(object):
                 with open("../datafiles/"+filename, "w") as output:
                     output.write(person)
 
-    def save_state(database_name):
+    def save_state(database_name=None):
         """saves current system data in a specified database"""
-        database = DatabaseConnections(database_name)
+        if database_name == None:
+            database = DatabaseConnections("amity_db")
+        else:
+            database = DatabaseConnections(database_name)
         for room in Amity.livingspaces.values():
             database.database_insert_livingspace(room.name, room.current_occupants)
 
@@ -185,6 +188,6 @@ class Amity(object):
             else:
                 Amity.add_person(person[0], person[1], person[2])
 
-Amity.create_room("oculus", "office")
-Amity.print_allocations()
+Amity.create_room("python", "livingspace")
+Amity.save_state()
 

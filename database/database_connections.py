@@ -6,58 +6,63 @@ from database.dbclass import Staff
 from database.dbclass import Fellow 
 from database.dbclass import Office
 from database.dbclass import LivingSpace
+from database.dbclass import generate_db
 
 class DatabaseConnections(object):
 
-    def __init__(self, database_name):
+    def __init__(self, database_name="amity_db"):
+        self.create_database(database_name)
         self.engine = create_engine("sqlite:///{}".format(database_name))
-
         self.Base = declarative_base()
+        self.Base.metadata.bind = self.engine
+        self.DBSession = sessionmaker(bind=self.engine)
+        self.session = self.DBSession()
+    
+    def create_database(self, database_name):
+        """create a new database or use system described database"""
 
-        self.Base.metadata.bind = engine
+        generate_db(database_name)
 
-        self.DBSession = sessionmaker(bind=engine)
-
-        self.session = DBSession()
-
-
-    def database_insert_staff(fname, lname, office_id):
+    def database_insert_staff(self, fname, lname, allocated_office):
         """Insertion function
 
         This function inputs new staff into the database
         """
-        new_staff = Staff(first_name=fname, last_name=lname)
+        new_staff = Staff(first_name=fname, last_name=lname, 
+                            allocated_office=allocated_office)
         self.session.add(new_staff)
         self.session.commit()
 
-    def database_insert_fellow(fname, lname, office_id, livingspace_id):
+    def database_insert_fellow(self, fname, lname, office, livingspace):
         """Insertion function
 
         This function inputs new fellow into the database
         """
-        new_fellow = Fellow(first_name=fname, last_name=lname, office_id=office_id, livingspace_id=livingspace_id)
+        new_fellow = Fellow(first_name=fname, last_name=lname, 
+                            allocated_office=office, 
+                            allocated_livingspace=livingspace)
         self.session.add(new_fellow)
         self.session.commit()
 
-    def database_insert_office(name):
+    def database_insert_office(self, name):
         """Insertion function
 
         This function inputs a new office into the database
         """
-        new_office = Office(name=name, current_occupants=0)
+        new_office = Office(name=name)
         self.session.add(new_office)
         self.session.commit()
 
-    def database_insert_livingspace(name):
+    def database_insert_livingspace(self, name):
         """Insertion function
 
         This function inputs a new livingspace into the database
         """
-        new_livingspace = LivingSpace(name=name, current_occupants=0)
+        new_livingspace = LivingSpace(name=name)
         self.session.add(new_livingspace)
         self.session.commit()
 
-    def database_delete_staff(fname, lname):
+    def database_delete_staff(self, fname, lname):
         """Deletion function
 
         This function deletes a specified staff from the database
@@ -65,7 +70,7 @@ class DatabaseConnections(object):
         self.session.query(Staff).filter_by(first_name=fname, last_name=lname).delete()
         self.session.commit()
 
-    def database_delete_fellow(fname, lname):
+    def database_delete_fellow(self, fname, lname):
         """Deletion function
 
         This function delete a specified fellow from the database
@@ -73,7 +78,7 @@ class DatabaseConnections(object):
         self.session.query(Fellow).filter_by(first_name=fname, last_name=lname).delete()
         self.session.commit()
 
-    def database_delete_office(name):
+    def database_delete_office(self, name):
         """Deletion function
 
         This function delete a specified office from the database
@@ -81,7 +86,7 @@ class DatabaseConnections(object):
         self.session.query(Office).filter_by(name=name).delete()
         self.session.commit()
 
-    def database_delete_livingspace(name):
+    def database_delete_livingspace(self, name):
         """Deletion function
 
         This function delete a specified livingspace from the database
@@ -89,46 +94,26 @@ class DatabaseConnections(object):
         self.session.query(LivingSpace).filter_by(name=name).delete()
         self.session.commit()
 
-    def database_update_staff(fname, lname, office_name):
+    def database_update_staff(self, fname, lname, office):
         """Update function
 
         This function updates the office of a staff in the database
         """
-        office = self.session.query(Office).filter_by(name=office_name).first()
         staff = self.session.query(Staff).filter_by(first_name=fname, last_name=lname).first()
-        staff.office_id = office.id
+        staff.allocated_office = office
         self.session.commit()
 
-    def database_update_fellow(fname, lname, office_name):
+    def database_update_fellow(self, fname, lname, office, livingspace):
         """Update function
 
         This function updates the office or livingspace of a fellow in the database
         """
-        office = self.session.query(Office).filter_by(name=office_name).first()
         fellow = self.session.query(Fellow).filter_by(first_name=fname, last_name=lname).first()
-        fellow.office_id =office.id
-        self.session.commit()
-        #find a way to include the livingspace as well
-
-    def database_update_office(name):
-        """Update function
-
-        This function updates the occupants in an office in the database
-        """
-        office = self.session.query(Office).filter_by(name=name).first()
-        office.current_occupants += 1
+        fellow.allocated_office =office
+        fellow.allocated_livingspace = livingspace
         self.session.commit()
 
-    def database_update_livingspace(name):
-        """Update function
-
-        This function updates the occupants in a livingspace in the database
-        """
-        livingspace = self.session.query(LivingSpace).filter_by(name=name).first()
-        livingspace.current_occupants += 1
-        self.session.commit()
-
-    def database_return_all_staff():
+    def database_return_all_staff(self):
         """Retrieve function
 
         This function returns all staff members in the database
@@ -136,11 +121,11 @@ class DatabaseConnections(object):
         results = []
         rows = self.session.query(Staff).all()
         for row in rows:
-            results.append((row.id, row.first_name, row.last_name,
-            row.office_id))
+            results.append((row.first_name, row.last_name,
+            row.allocated_office))
         return results
 
-    def database_return_all_fellows():
+    def database_return_all_fellows(self):
         """Retrieve function
 
         This function returns all fellows in the database
@@ -148,33 +133,11 @@ class DatabaseConnections(object):
         results = []
         rows = self.session.query(Fellow).all()
         for row in rows:
-            results.append((row.id, row.first_name, row.last_name,
-            row.office_id, row.livingspace_id))
+            results.append((row.first_name, row.last_name,
+            row.allocated_office, row.allocated_livingspace))
         return results
 
-    def database_return_staff(fname, lname):
-        """Retrieve function
-
-        This function returns a specified staff member from the database
-        """
-        row = self.session.query(Staff).filter_by(first_name=fname, last_name=lname).first()
-        if row is not None:
-            return (row.id, row.first_name, row.last_name, row.office_id)
-        else:
-            return "Does Not Exist"
-
-    def database_return_fellow(fname, lname):
-        """Retrieve function
-
-        This function returns a specified fellow from the database
-        """
-        row = self.session.query(Fellow).filter_by(first_name=fname, last_name=lname).first()
-        if row is not None:
-            return (row.id, row.first_name, row.last_name, row.office_id, row.livingspace_id)
-        else:
-            return "Does Not Exist"
-
-    def database_return_all_offices(name):
+    def database_return_all_offices(self, name):
         """Retrieve function
 
         This function returns all offices in the database
@@ -182,10 +145,10 @@ class DatabaseConnections(object):
         results = []
         rows = self.session.query(Office).all()
         for row in rows:
-            results.append((row.id, row.name, row.current_occupants))
+            results.append((row.name))
         return results
 
-    def database_return_all_livingspaces(name):
+    def database_return_all_livingspaces(self, name):
         """Retrieve function
 
         This function returns all livingspaces in the database
@@ -193,27 +156,5 @@ class DatabaseConnections(object):
         results = []
         rows = self.session.query(Office).all()
         for row in rows:
-            results.append((row.id, row.name, row.current_occupants))
+            results.append((row.name))
         return results
-
-    def database_return_office(name):
-        """Retrieve function
-
-        This function returns a specified office from the database
-        """
-        row = self.session.query(Office).filter_by(name=name).first()
-        if row is not None:
-            return (row.id, row.name, row.current_occupants)
-        else:
-            return "Does not exist"
-
-    def database_return_livingspace(name):
-        """Retrieve function
-
-        This function returns a specified livingspace from the database
-        """
-        row = self.session.query(LivingSpace).filter_by(name=name).first()
-        if row is not None:
-            return (row.id, row.name, row.current_occupants)
-        else:
-            return "Does not exist"

@@ -16,7 +16,6 @@ class Office(Base):
     __tablename__ = 'office'
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(250), nullable=False)
-    current_occupants = Column(Integer, nullable=False)
 
 class LivingSpace(Base):
     """Livingspace Database class
@@ -26,7 +25,6 @@ class LivingSpace(Base):
     __tablename__ = 'livingspace'
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(250), nullable=False)
-    current_occupants = Column(Integer, nullable=False)
 
 class Staff(Base):
     """Staff Database class
@@ -37,7 +35,7 @@ class Staff(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     first_name = Column(String(250), nullable=False)
     last_name = Column(String(250), nullable=True)
-    office_id = Column(Integer, ForeignKey('office.id'), nullable=True)
+    allocated_office = Column(String(250), ForeignKey('office.name'), nullable=True)
     office = relationship(Office)
 
 class Fellow(Base):
@@ -49,11 +47,14 @@ class Fellow(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     first_name = Column(String(250), nullable=False)
     last_name = Column(String(250), nullable=False)
-    office_id = Column(Integer, ForeignKey('office.id'), nullable=True)
-    livingspace_id = Column(Integer, ForeignKey('livingspace.id'), nullable=True)
+    allocated_office = Column(String(250), ForeignKey('office.name'), nullable=True)
+    allocated_livingspace = Column(String(250), ForeignKey('livingspace.name'), nullable=True)
     office = relationship(Office)
     livingspace = relationship(LivingSpace)
 
-engine = create_engine('sqlite:///amity_db')
+def generate_db(database_name):
+    """generate a database based on the name given"""
 
-Base.metadata.create_all(engine)
+    engine = create_engine("sqlite:///{}".format(database_name))
+
+    Base.metadata.create_all(engine)
