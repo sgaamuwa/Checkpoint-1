@@ -133,8 +133,7 @@ class DatabaseConnections(object):
         results = []
         rows = self.session.query(Fellow).all()
         for row in rows:
-            results.append((row.first_name, row.last_name,
-            row.allocated_office, row.allocated_livingspace))
+            results.append(row)
         return results
 
     def database_return_all_offices(self, name):

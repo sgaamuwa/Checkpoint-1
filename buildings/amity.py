@@ -42,6 +42,28 @@ class Amity(object):
         
         return "{} {} allocated to {}".format(person.first_name, person.last_name,
                                                 person.allocated_office)
+    
+    def add_fellow_from_database(fname, lname, office=None, livingspace=None):
+        """adds a fellow from the database to the working dataset"""
+
+        fellow = Fellow(fname, lname)
+        fellow.allocated_livingspace = livingspace
+        fellow.allocated_office = office
+        Amity.fellows[fellow.staff_id] = fellow
+        if office is not None:
+            Amity.offices[office].current_occupants.append(fname+" "+lname)
+        if livingspace is not None:
+            Amity.livingspaces[livingspace].current_occupants.append(fname+" "+lname)
+
+    def add_staff_from_database(fname, lname, office=None):
+        """adds a fellow from the database to the working dataset"""
+
+        staff = Staff(fname, lname)
+        staff.allocated_livingspace = livingspace
+        staff.allocated_office = office
+        Amity.staff[staff.staff_id] = staff
+        if office is not None:
+            Amity.offices[office].current_occupants.append(fname+" "+lname)
 
     def assign_room(person):
         """randomly assigns a room to the person that it is passed"""
@@ -158,19 +180,24 @@ class Amity(object):
         else:
             database = DatabaseConnections(database_name)
         for room in Amity.livingspaces.values():
-            database.database_insert_livingspace(room.name, room.current_occupants)
+            database.database_insert_livingspace(room.name)
+        for room in Amity.offices.values():
+            database.database_insert_office(room.name)
+        for person in Amity.fellows.values():
+            database.database_insert_fellow(person.first_name,
+                                            person.last_name,
+                                            person.allocated_office,
+                                            person.allocated_livingspace)
+        for person in Amity.staff.values():
+            database.database_insert_staff(person.first_name,
+                                            person.last_name,
+                                            person.allocated_office)
 
     def load_state(database):
         """loads data from a specified database into the system"""
         database = DatabaseConnections(database)
-        for row in database.database_return_all_offices:
-            Amity.offices[row.name] = row
-        for row in database.database_return_all_livingspaces:
-            Amity.livingspaces[row.name] = row
-        for row in database.database_return_all_fellows:
-            Amity.fellows[row.staff_id] = row
-        for row in database.database_return_all_staff:
-            Amity.staff[row.staff_id] = row 
+        print(database.database_return_all_offices)
+        
 
     def load_people(filename):
         """loads people into the system from specified file"""
@@ -188,6 +215,7 @@ class Amity(object):
             else:
                 Amity.add_person(person[0], person[1], person[2])
 
-Amity.create_room("python", "livingspace")
-Amity.save_state()
+Amity.load_state("amity_db")
+Amity.print_allocations()
+
 
