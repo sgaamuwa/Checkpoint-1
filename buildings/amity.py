@@ -19,7 +19,9 @@ class Amity(object):
     def create_room(name, kind):
         """creates a room depending on the type specified"""
         #create room object respectively
-        if kind == "office":
+        if name in Amity.offices.keys() or name in Amity.livingspaces.keys():
+            return "Room already created"
+        elif kind == "office":
             room = Office(name)
             Amity.offices[name] = room
         elif kind == "livingspace":
@@ -221,7 +223,4 @@ class Amity(object):
                 Amity.add_person(person[0], person[1], person[2], person[3])
             else:
                 Amity.add_person(person[0], person[1], person[2])
-
-Amity.load_state("amity_db")
-Amity.print_allocations()
 
