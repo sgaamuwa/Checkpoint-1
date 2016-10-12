@@ -67,7 +67,8 @@ class DatabaseConnections(object):
 
         This function deletes a specified staff from the database
         """
-        self.session.query(Staff).filter_by(first_name=fname, last_name=lname).delete()
+        self.session.query(Staff).filter_by(first_name=fname, 
+                                            last_name=lname).delete()
         self.session.commit()
 
     def database_delete_fellow(self, fname, lname):
@@ -75,7 +76,8 @@ class DatabaseConnections(object):
 
         This function delete a specified fellow from the database
         """
-        self.session.query(Fellow).filter_by(first_name=fname, last_name=lname).delete()
+        self.session.query(Fellow).filter_by(first_name=fname, 
+                                            last_name=lname).delete()
         self.session.commit()
 
     def database_delete_office(self, name):
@@ -99,7 +101,8 @@ class DatabaseConnections(object):
 
         This function updates the office of a staff in the database
         """
-        staff = self.session.query(Staff).filter_by(first_name=fname, last_name=lname).first()
+        staff = self.session.query(Staff).filter_by(first_name=fname, 
+                                                    last_name=lname).first()
         staff.allocated_office = office
         self.session.commit()
 
@@ -108,7 +111,8 @@ class DatabaseConnections(object):
 
         This function updates the office or livingspace of a fellow in the database
         """
-        fellow = self.session.query(Fellow).filter_by(first_name=fname, last_name=lname).first()
+        fellow = self.session.query(Fellow).filter_by(first_name=fname, 
+                                                    last_name=lname).first()
         fellow.allocated_office =office
         fellow.allocated_livingspace = livingspace
         self.session.commit()
