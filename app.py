@@ -83,11 +83,11 @@ class AmityRoomAllocations(cmd.Cmd):
         if "office" in rooms:
             for room in rooms:
                 if room != "office":
-                    Amity.create_room(room, "office")
+                    print(Amity.create_room(room, "office"))
         elif "livingspace" in rooms:
             for room in rooms:
                 if room != "livingspace":
-                    Amity.create_room(room, "livingspace")
+                    print(Amity.create_room(room, "livingspace"))
 
     @docopt_cmd
     def do_add_person(self, args):
@@ -99,8 +99,8 @@ class AmityRoomAllocations(cmd.Cmd):
 
         Usage: add_person <first_name> <last_name> <title> [--wa=N] 
         """
-        Amity.add_person(args["<first_name>"], args["<last_name>"], args["<title>"].upper(),
-                        args["--wa"])
+        print(Amity.add_person(args["<first_name>"], args["<last_name>"], 
+                args["<title>"].upper(), args["--wa"]))
 
     @docopt_cmd
     def do_reallocate_person(self, args):
@@ -115,9 +115,9 @@ class AmityRoomAllocations(cmd.Cmd):
         room = args["<new_room_name>"]
 
         if person in Amity.fellows.keys():
-            Amity.reallocate(Amity.fellows[person], room)
+            print(Amity.reallocate(Amity.fellows[person], room))
         elif person in Amity.staff.keys():
-            Amity.reallocate(Amity.staff[person], room)
+            print(Amity.reallocate(Amity.staff[person], room))
 
     @docopt_cmd
     def do_load_people(self, args):
@@ -136,7 +136,7 @@ class AmityRoomAllocations(cmd.Cmd):
 
         Usage: load_people <filename>
         """
-        Amity.load_people(args["<filename>"])
+        print(Amity.load_people(args["<filename>"]))
 
     @docopt_cmd
     def do_print_allocations(self, args):
@@ -215,5 +215,8 @@ class AmityRoomAllocations(cmd.Cmd):
             pass 
 
 if __name__ == "__main__":
-    startup()
-    AmityRoomAllocations().cmdloop()
+    try: 
+        startup()
+        AmityRoomAllocations().cmdloop()
+    except KeyboardInterrupt:
+        print("Application closing abruptly")

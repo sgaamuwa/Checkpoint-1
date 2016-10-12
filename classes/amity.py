@@ -21,13 +21,14 @@ class Amity(object):
         #create room object respectively
         if (name.lower() in (key.lower() for key in Amity.offices.keys()) 
         or name.lower() in (key.lower() for key in Amity.livingspaces.keys())):
-            print ("Room already exists")
+            return "Room already exists"
         elif kind == "office":
             room = Office(name)
             Amity.offices[name] = room
         elif kind == "livingspace":
             room = LivingSpace(name)
             Amity.livingspaces[name] = room
+        return "Room {} has been created".format(name)
 
     def add_person(fname, lname, title, wants_accommodation=None):
         """creates a new person basing on their specified type"""
@@ -48,8 +49,8 @@ class Amity(object):
             Amity.assign_room(person)
             Amity.staff[person.staff_id] = person
         
-        return "{} {} allocated to {}".format(person.first_name, person.last_name,
-                                                person.allocated_office)
+        return "{} {} added and assigned to {}".format(person.first_name, 
+                                person.last_name, person.allocated_office)
 
     def validate_staff_id(staff_id):
         """determines that the staff id is not in the system"""
@@ -133,7 +134,7 @@ class Amity(object):
         """assigns a person to the specified room if it is free"""
 
         #check for the room in the rooms list 
-        if name in Amity.offices.keys():
+        if room_name in Amity.offices.keys():
             office = Amity.offices[room_name]
         else:
             return "Room doesn't exist"
@@ -145,9 +146,11 @@ class Amity(object):
         #remove the person from their current office
         Amity.offices[person.allocated_office].current_occupants.remove(person.first_name +" "
                                                                         + person.last_name)
-        person.allocated_office = office.room_name
+        person.allocated_office = office.name
         #add person to the new selected office
         office.current_occupants.append(person.first_name +" "+ person.last_name)
+        return "{} {} reallocated to {}".format(person.first_name, 
+                                        person.last_name, office.name)
 
     def print_allocations(filename=None):
         """returns a printout of all rooms and persons assigned to them"""
@@ -190,7 +193,7 @@ class Amity(object):
                     output.write("\n\n")
     
     def print_unallocated(filename=None):
-        """returns a list of all the unallocated staff members"""
+        """prints a list of all the unallocated staff members"""
 
         unallocated = []
         #add the unallocated to a list
@@ -249,6 +252,8 @@ class Amity(object):
                                             person[4])
         for person in database.database_return_all_staff():
             Amity.add_staff_from_database(person[0], person[1], person[2], person[3])
+
+        return "\nDatabase {} has been loaded in the working data set\n".format(database)
 
     def load_people(filename):
         """loads people into the system from specified file"""
