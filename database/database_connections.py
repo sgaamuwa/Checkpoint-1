@@ -23,23 +23,23 @@ class DatabaseConnections(object):
 
         generate_db(database_name)
 
-    def database_insert_staff(self, fname, lname, allocated_office):
+    def database_insert_staff(self, fname, lname, staff_id, allocated_office):
         """Insertion function
 
         This function inputs new staff into the database
         """
-        new_staff = Staff(first_name=fname, last_name=lname, 
+        new_staff = Staff(first_name=fname, last_name=lname, staff_id=staff_id,
                             allocated_office=allocated_office)
         self.session.add(new_staff)
         self.session.commit()
 
-    def database_insert_fellow(self, fname, lname, office, livingspace):
+    def database_insert_fellow(self, fname, lname, staff_id, office, livingspace):
         """Insertion function
 
         This function inputs new fellow into the database
         """
         new_fellow = Fellow(first_name=fname, last_name=lname, 
-                            allocated_office=office, 
+                            staff_id=staff_id, allocated_office=office, 
                             allocated_livingspace=livingspace)
         self.session.add(new_fellow)
         self.session.commit()

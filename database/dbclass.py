@@ -35,6 +35,7 @@ class Staff(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     first_name = Column(String(250), nullable=False)
     last_name = Column(String(250), nullable=True)
+    staff_id = Column(String(250), nullable=False)
     allocated_office = Column(String(250), ForeignKey('office.name'), nullable=True)
     office = relationship(Office)
 
@@ -47,6 +48,7 @@ class Fellow(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     first_name = Column(String(250), nullable=False)
     last_name = Column(String(250), nullable=False)
+    staff_id = Column(String(250), nullable=False)
     allocated_office = Column(String(250), ForeignKey('office.name'), nullable=True)
     allocated_livingspace = Column(String(250), ForeignKey('livingspace.name'), nullable=True)
     office = relationship(Office)

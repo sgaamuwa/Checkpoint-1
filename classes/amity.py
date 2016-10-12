@@ -18,9 +18,11 @@ class Amity(object):
 
     def create_room(name, kind):
         """creates a room depending on the type specified"""
+
         #create room object respectively
-        if name in Amity.offices.keys() or name in Amity.livingspaces.keys():
-            return "Room already created"
+        if (name.lower() in (key.lower() for key in Amity.offices.keys()) 
+        or name.lower() in (key.lower() for key in Amity.livingspaces.keys())):
+            print ("Room already exists")
         elif kind == "office":
             room = Office(name)
             Amity.offices[name] = room
@@ -31,27 +33,38 @@ class Amity(object):
     def add_person(fname, lname, title, wants_accommodation=None):
         """creates a new person basing on their specified type"""
 
+        staff_id = input("Enter {} {}'s staff id: ".format(fname, lname))
+        #calls the validate staff id to ensure it is unique
+        Amity.validate_staff_id(staff_id)
         #check if the person is staff or fellow
         if title == "FELLOW":
-            person = Fellow(fname, lname)
+            person = Fellow(fname, lname, staff_id)
             Amity.assign_room(person)
             #if wants accommodation assign livingspace
             if wants_accommodation == "Y":
                 Amity.assign_livingspace(person)
             Amity.fellows[person.staff_id] = person
         if title == "STAFF":
-            person = Staff(fname, lname)
+            person = Staff(fname, lname, staff_id)
             Amity.assign_room(person)
             Amity.staff[person.staff_id] = person
         
         return "{} {} allocated to {}".format(person.first_name, person.last_name,
                                                 person.allocated_office)
+
+    def validate_staff_id(staff_id):
+        """determines that the staff id is not in the system"""
+
+        if staff_id in Amity.fellows.keys() or staff_id in Amity.staff.keys():
+            print("Staff Id already exists")
+            staff_id = input("Enter another staff id: ")
+            Amity.validate_staff_id(staff_id) 
     
     def add_fellow_from_database(fname, lname, office=None, livingspace=None):
         """adds a fellow from the database to the working dataset"""
 
         #create a Fellow object of person from the database
-        fellow = Fellow(fname, lname)
+        fellow = Fellow(fname, lname, staff_id)
         fellow.allocated_livingspace = livingspace
         fellow.allocated_office = office
         Amity.fellows[fellow.staff_id] = fellow
@@ -66,7 +79,7 @@ class Amity(object):
         """adds a fellow from the database to the working dataset"""
 
         #create a Staff object of person from the database
-        staff = Staff(fname, lname)
+        staff = Staff(fname, lname, staff_id)
         staff.allocated_office = office
         Amity.staff[staff.staff_id] = staff
         #add person to allocated room 
@@ -75,6 +88,7 @@ class Amity(object):
 
     def assign_room(person):
         """randomly assigns a room to the person that it is passed"""
+
         #create available rooms and append rooms with space to it 
         if len(Amity.offices) == 0:
             return "There are no rooms"
@@ -96,6 +110,7 @@ class Amity(object):
     
     def assign_livingspace(person):
         """randomly assigns a room to the person that it is passed"""
+
         #create available rooms and append rooms with space to it 
         if len(Amity.livingspaces) == 0:
             return "There are no rooms"
@@ -117,6 +132,7 @@ class Amity(object):
 
     def reallocate(person, room_name):
         """assigns a person to the specified room if it is free"""
+
         #check for the room in the rooms list 
         if name in Amity.offices.keys():
             office = Amity.offices[room_name]
@@ -136,6 +152,7 @@ class Amity(object):
 
     def print_allocations(filename=None):
         """returns a printout of all rooms and persons assigned to them"""
+
         #check if there are rooms to display in the system
         if len(Amity.offices) == 0 and len(Amity.livingspaces) == 0:
             return "There are no rooms in the system"
@@ -175,6 +192,7 @@ class Amity(object):
     
     def print_unallocated(filename=None):
         """returns a list of all the unallocated staff members"""
+
         unallocated = []
         #add the unallocated to a list
         for person in Amity.staff.values():
@@ -193,6 +211,7 @@ class Amity(object):
 
     def save_state(database_name=None):
         """saves current system data in a specified database"""
+
         if database_name == None:
             #set the default database to amity_db
             database = DatabaseConnections("amity_db")
@@ -206,15 +225,18 @@ class Amity(object):
         for person in Amity.fellows.values():
             database.database_insert_fellow(person.first_name,
                                             person.last_name,
+                                            person.staff_id,
                                             person.allocated_office,
                                             person.allocated_livingspace)
         for person in Amity.staff.values():
             database.database_insert_staff(person.first_name,
                                             person.last_name,
+                                            person.staff_id,
                                             person.allocated_office)
 
     def load_state(database):
         """loads data from a specified database into the system"""
+
         #set the database to the specified database
         database = DatabaseConnections(database)
         for office in database.database_return_all_offices():
@@ -224,12 +246,14 @@ class Amity(object):
             Amity.create_room(livingspace, "livingspace")
             print(Amity.livingspaces)
         for person in database.database_return_all_fellows():
-            Amity.add_fellow_from_database(person[0], person[1], person[2], person[3])
+            Amity.add_fellow_from_database(person[0], person[1], person[2], person[3],
+                                            person[4])
         for person in database.database_return_all_staff():
-            Amity.add_staff_from_database(person[0], person[1], person[2])
+            Amity.add_staff_from_database(person[0], person[1], person[2], person[3])
 
     def load_people(filename):
         """loads people into the system from specified file"""
+        
         people = []
         with open("./datafiles/"+filename) as data:
             input = data.readlines()
@@ -243,4 +267,3 @@ class Amity(object):
                 Amity.add_person(person[0], person[1], person[2], person[3])
             else:
                 Amity.add_person(person[0], person[1], person[2])
-

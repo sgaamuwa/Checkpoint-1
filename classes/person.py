@@ -5,15 +5,12 @@ class Person(object):
     
     Defines as person in the system
     """
-    count = 1
-    def __init__(self, first_name, last_name):
+    def __init__(self, first_name, last_name, staff_id):
         self.first_name = first_name
         self.last_name = last_name 
-        self.staff_id = "ST-"+str(Person.count)
+        self.staff_id = staff_id
         self.allocated_office = ""
-        #increment count of person class by one
-        Person.count += 1
-
+    
 
 class Staff(Person):
     """Staff class
@@ -31,13 +28,9 @@ class Fellow(Person):
     a specific fellow in the system 
     """
 
-    count = 1
-    def __init__(self, first_name, last_name):
-        super().__init__(first_name, last_name)
+    def __init__(self, first_name, last_name, staff_id):
+        super().__init__(first_name, last_name, staff_id)
         self.allocated_livingspace = ""
-        self.staff_id = "FL-"+str(Fellow.count)
-        #increment count of fellow class by one
-        Fellow.count += 1
 
 
 
