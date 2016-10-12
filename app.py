@@ -1,4 +1,7 @@
 """
+The Amity Room Allocation application is a system for assigning rooms
+to staff and fellows. Rooms are assigned randomly when people are added
+to the system.
 
 Usage:
     create_room <room_name>...
@@ -11,6 +14,7 @@ Usage:
     print_room <room_name>
     save_state [--db <sqlite_database>]
     load_state <sqlite_database>
+    quit
 
 Options:
     -h, --help  Show this screen and exit
@@ -23,8 +27,11 @@ Options:
 import cmd
 import os 
 
-from docopt import docopt, DocoptExit
 from classes.amity import Amity
+from docopt import docopt, DocoptExit
+from pyfiglet import figlet_format
+from termcolor import cprint
+
 
 def docopt_cmd(func):
     """
@@ -55,8 +62,12 @@ def docopt_cmd(func):
     fn.__dict__.update(func.__dict__)
     return fn
 
+def startup():
+    cprint(figlet_format("AMITY ROOM", font="starwars"),
+       "yellow", attrs=["bold"])
+
 class AmityRoomAllocations(cmd.Cmd):
-    prompt = "(amity)"
+    prompt = "Amity&>>>"
 
     @docopt_cmd
     def do_create_room(self, args):
@@ -189,5 +200,21 @@ class AmityRoomAllocations(cmd.Cmd):
         """
         Amity.load_state(args["<sqlite_database>"])
 
+    @docopt_cmd
+    def do_quit(self, args):
+        """
+        Quits the application and automatically saves the session to the database
+
+        Usage: quit
+        """
+        print("Any unsaved work will be lost\n")
+        print("Are you sure you want to quit?\n")
+        answer = input("Enter Yes or No: ").strip()
+        if answer == "Yes":
+            exit()
+        elif answer == "No":
+            pass 
+
 if __name__ == "__main__":
+    startup()
     AmityRoomAllocations().cmdloop()

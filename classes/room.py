@@ -1,6 +1,10 @@
 
 
 class Room(object):
+    """Room class
+    
+    Defines the generic room in the system
+    """
 
     def __init__(self, name):
         self.name = name
@@ -18,10 +22,20 @@ class Room(object):
 
 
 class Office(Room):
+    """Office class
+    
+    Inherits from the room class and defines offices as 
+    specific rooms
+    """
     pass
 
    
 class LivingSpace(Room):
+    """LivingSpace class
+    
+    Inherits from the room class and defines livingspaces as 
+    specific rooms
+    """
     def __init__(self, name):
         super().__init__(name)
         self.max_occupants = 4

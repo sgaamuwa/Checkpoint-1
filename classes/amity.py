@@ -31,9 +31,11 @@ class Amity(object):
     def add_person(fname, lname, title, wants_accommodation=None):
         """creates a new person basing on their specified type"""
 
+        #check if the person is staff or fellow
         if title == "FELLOW":
             person = Fellow(fname, lname)
             Amity.assign_room(person)
+            #if wants accommodation assign livingspace
             if wants_accommodation == "Y":
                 Amity.assign_livingspace(person)
             Amity.fellows[person.staff_id] = person
@@ -48,21 +50,26 @@ class Amity(object):
     def add_fellow_from_database(fname, lname, office=None, livingspace=None):
         """adds a fellow from the database to the working dataset"""
 
+        #create a Fellow object of person from the database
         fellow = Fellow(fname, lname)
         fellow.allocated_livingspace = livingspace
         fellow.allocated_office = office
         Amity.fellows[fellow.staff_id] = fellow
+        #add person to office they are allocated to in the database
         if office is not "" and office is not None:
             Amity.offices[office].current_occupants.append(fname+" "+lname)
+        #add person to livingspace they are allocated to in database
         if livingspace is not "" and livingspace is not None:
             Amity.livingspaces[livingspace].current_occupants.append(fname+" "+lname)
 
     def add_staff_from_database(fname, lname, office=None):
         """adds a fellow from the database to the working dataset"""
 
+        #create a Staff object of person from the database
         staff = Staff(fname, lname)
         staff.allocated_office = office
         Amity.staff[staff.staff_id] = staff
+        #add person to allocated room 
         if office is not "" and office is not None:
             Amity.offices[office].current_occupants.append(fname+" "+lname)
 
@@ -71,6 +78,7 @@ class Amity(object):
         #create available rooms and append rooms with space to it 
         if len(Amity.offices) == 0:
             return "There are no rooms"
+        #list for the available offices
         available_offices = []
         for office in Amity.offices.values():
             if len(office.current_occupants) < 6:
@@ -79,9 +87,11 @@ class Amity(object):
         if len(available_offices) == 0:
             return "All current rooms are full"
         else:
+            #randomise the choice of the office 
             random_office = random.choice(available_offices)
         person.allocated_office = random_office.name
         random_office.current_occupants.append(person.first_name +" "+ person.last_name)
+        #update the room object in the dictionaries 
         Amity.offices[random_office.name] = random_office
     
     def assign_livingspace(person):
@@ -97,10 +107,12 @@ class Amity(object):
         if len(available_livingspaces) == 0:
             return "All current rooms are full"
         else:
+            #randomise the choice of the livingspace
             random_livingspace = random.choice(available_livingspaces)
         person.allocated_livingspace = random_livingspace.name
         random_livingspace.current_occupants.append(person.first_name 
                                                 +" "+ person.last_name)
+        #update the room object in the dictionary
         Amity.livingspaces[random_livingspace.name] = random_livingspace
 
     def reallocate(person, room_name):
@@ -119,13 +131,15 @@ class Amity(object):
         Amity.offices[person.allocated_office].current_occupants.remove(person.first_name +" "
                                                                         + person.last_name)
         person.allocated_office = office.room_name
+        #add person to the new selected office
         office.current_occupants.append(person.first_name +" "+ person.last_name)
 
     def print_allocations(filename=None):
         """returns a printout of all rooms and persons assigned to them"""
-        #check if the filename is empty and print on the screen
+        #check if there are rooms to display in the system
         if len(Amity.offices) == 0 and len(Amity.livingspaces) == 0:
             return "There are no rooms in the system"
+        #check if the filename is empty and print on the screen
         if filename == None:
             for office in Amity.offices.values():
                 print(office.name+"\n")
@@ -173,14 +187,17 @@ class Amity(object):
             if filename == None:
                 print(person)
             else:
+                #write out to the specified file 
                 with open("./datafiles/"+filename, "w") as output:
                     output.write(person)
 
     def save_state(database_name=None):
         """saves current system data in a specified database"""
         if database_name == None:
+            #set the default database to amity_db
             database = DatabaseConnections("amity_db")
         else:
+            #otherwise use the specified name
             database = DatabaseConnections(database_name)
         for room in Amity.livingspaces.values():
             database.database_insert_livingspace(room.name)
@@ -198,6 +215,7 @@ class Amity(object):
 
     def load_state(database):
         """loads data from a specified database into the system"""
+        #set the database to the specified database
         database = DatabaseConnections(database)
         for office in database.database_return_all_offices():
             Amity.create_room(office, "office")
