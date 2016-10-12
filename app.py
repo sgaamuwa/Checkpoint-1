@@ -63,7 +63,7 @@ def docopt_cmd(func):
     return fn
 
 def startup():
-    cprint(figlet_format("AMITY ROOM", font="starwars"),
+    cprint(figlet_format("AMITY ROOM ALLOCATION", font="rectangles"),
        "yellow", attrs=["bold"])
 
 class AmityRoomAllocations(cmd.Cmd):
@@ -97,11 +97,10 @@ class AmityRoomAllocations(cmd.Cmd):
         First name, last name, type of employee
         For Fellows, they have the option to request for accommodation
 
-        Usage: add_person <first_name> <last_name> <title> [--wa] 
+        Usage: add_person <first_name> <last_name> <title> [--wa=N] 
         """
-        print(args)
-        Amity.add_person(args["<first_name>"], args["<last_name>"], args["<title>"],
-                        args["[--wa]"])
+        Amity.add_person(args["<first_name>"], args["<last_name>"], args["<title>"].upper(),
+                        args["--wa"])
 
     @docopt_cmd
     def do_reallocate_person(self, args):
@@ -210,9 +209,9 @@ class AmityRoomAllocations(cmd.Cmd):
         print("Any unsaved work will be lost\n")
         print("Are you sure you want to quit?\n")
         answer = input("Enter Yes or No: ").strip()
-        if answer == "Yes":
+        if answer.lower() == "yes":
             exit()
-        elif answer == "No":
+        elif answer.lower() == "no":
             pass 
 
 if __name__ == "__main__":
