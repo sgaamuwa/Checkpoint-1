@@ -8,7 +8,6 @@ from classes.room import Office
 from classes.room import LivingSpace
 
 
-
 class Amity(object):
 
     staff = {}
