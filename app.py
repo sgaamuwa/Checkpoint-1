@@ -78,16 +78,11 @@ class AmityRoomAllocations(cmd.Cmd):
 
         Usage: create_room <room_name>...
         """
+        kind = input("Enter the type of room: ")
         rooms = args["<room_name>"]
-
-        if "office" in rooms:
-            for room in rooms:
-                if room != "office":
-                    print(Amity.create_room(room, "office"))
-        elif "livingspace" in rooms:
-            for room in rooms:
-                if room != "livingspace":
-                    print(Amity.create_room(room, "livingspace"))
+       
+        for room in rooms:
+                print(Amity.create_room(room, kind.lower()))
 
     @docopt_cmd
     def do_add_person(self, args):

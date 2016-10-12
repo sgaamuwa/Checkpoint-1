@@ -18,10 +18,11 @@ class Amity(object):
     def create_room(name, kind):
         """creates a room depending on the type specified"""
 
-        #create room object respectively
+        #sheck if room is already in the system
         if (name.lower() in (key.lower() for key in Amity.offices.keys()) 
         or name.lower() in (key.lower() for key in Amity.livingspaces.keys())):
             return "Room already exists"
+        #create room object and add it to respective dictionary
         elif kind == "office":
             room = Office(name)
             Amity.offices[name] = room
