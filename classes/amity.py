@@ -2,10 +2,10 @@ import os
 import random
 
 from database.database_connections import DatabaseConnections
-from people.fellow import Fellow
-from people.staff import Staff
-from rooms.office import Office
-from rooms.livingspace import LivingSpace
+from classes.person import Fellow
+from classes.person import Staff
+from classes.room import Office
+from classes.room import LivingSpace
 
 
 
@@ -124,24 +124,26 @@ class Amity(object):
     def print_allocations(filename=None):
         """returns a printout of all rooms and persons assigned to them"""
         #check if the filename is empty and print on the screen
+        if len(Amity.offices) == 0 and len(Amity.livingspaces) == 0:
+            return "There are no rooms in the system"
         if filename == None:
             for office in Amity.offices.values():
                 print(office.name+"\n")
-                print("-"*70)
+                print("-"*80)
                 print("\n")
                 for person in office.current_occupants:
-                    print(person+", ", end="\n")
+                    print(person+", ", end=" ")
                 print("\n\n")
             for livingspace in Amity.livingspaces.values():
                 print(livingspace.name+"\n")
-                print("-"*70)
+                print("-"*80)
                 print("\n")
                 for person in livingspace.current_occupants:
-                    print(person+", ", end="\n") 
+                    print(person+", ", end=" ") 
                 print("\n\n")
         else:
             #write out to the filename listed
-            with open("../datafiles/"+filename, "w") as output:
+            with open("./datafiles/"+filename, "w") as output:
                 for office in Amity.offices.values():
                     output.write(office.name+"\n")
                     output.write("-"*70)
@@ -171,7 +173,7 @@ class Amity(object):
             if filename == None:
                 print(person)
             else:
-                with open("../datafiles/"+filename, "w") as output:
+                with open("./datafiles/"+filename, "w") as output:
                     output.write(person)
 
     def save_state(database_name=None):
@@ -211,7 +213,7 @@ class Amity(object):
     def load_people(filename):
         """loads people into the system from specified file"""
         people = []
-        with open("../datafiles/"+filename) as data:
+        with open("./datafiles/"+filename) as data:
             input = data.readlines()
             #for each line splits them into their individual words
             for line in input:
