@@ -126,7 +126,7 @@ class DatabaseConnections(object):
         rows = self.session.query(Staff).all()
         for row in rows:
             results.append((row.first_name, row.last_name,
-            row.allocated_office))
+            row.staff_id, row.allocated_office))
         return results
 
     def database_return_all_fellows(self):
@@ -137,7 +137,7 @@ class DatabaseConnections(object):
         results = []
         rows = self.session.query(Fellow).all()
         for row in rows:
-            results.append((row.first_name, row.last_name,
+            results.append((row.first_name, row.last_name, row.staff_id,
             row.allocated_office, row.allocated_livingspace))
         return results
 
@@ -150,7 +150,6 @@ class DatabaseConnections(object):
         rows = self.session.query(Office).all()
         for row in rows:
             results.append((row.name))
-        print (results)
         return (results)
 
     def database_return_all_livingspaces(self):

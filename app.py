@@ -8,7 +8,7 @@ Usage:
     add_person <first_name> <last_name> <title> [--wa=N]
     reallocate_person <person_identifier> <new_room_name>
     load_people <filename>
-    print_all_rooms
+    print_room <room_name>
     print_allocations [--o=filename]
     print_unallocated [--o=filename]
     print_room <room_name>
@@ -111,10 +111,16 @@ class AmityRoomAllocations(cmd.Cmd):
         person = args["<person_identifier>"]
         room = args["<new_room_name>"]
 
-        if person in Amity.fellows.keys():
-            print(Amity.reallocate(Amity.fellows[person], room))
-        elif person in Amity.staff.keys():
-            print(Amity.reallocate(Amity.staff[person], room))
+        if room in Amity.offices.keys():
+            if person in Amity.fellows.keys():
+                print(Amity.reallocate(Amity.fellows[person], room))
+            elif person in Amity.staff.keys():
+                print(Amity.reallocate(Amity.staff[person], room))
+        elif room in Amity.livingspaces.keys():
+            if person in Amity.fellows.keys():
+                print(Amity.reallocate_ls(Amity.fellows[person], room))
+            elif person in Amity.staff.keys():
+                print("Staff don't have livingspaces")
 
     @docopt_cmd
     def do_load_people(self, args):
@@ -157,9 +163,9 @@ class AmityRoomAllocations(cmd.Cmd):
         Usage: print_unallocated [--o=filename]
         """
         if args["--o"] is None:
-            Amity.print_unallocated()
+            print(Amity.print_unallocated())
         else:
-            Amity.print_unallocated(args["--o"])
+            print(Amity.print_unallocated(args["--o"]))
 
     @docopt_cmd
     def do_print_room(self, args):
@@ -194,7 +200,7 @@ class AmityRoomAllocations(cmd.Cmd):
 
         Usage: load_state <sqlite_database>
         """
-        Amity.load_state(args["<sqlite_database>"])
+        print(Amity.load_state(args["<sqlite_database>"]))
 
     @docopt_cmd
     def do_quit(self, args):
