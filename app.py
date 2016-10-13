@@ -65,9 +65,11 @@ def docopt_cmd(func):
 def startup():
     cprint(figlet_format("AMITY ROOM ALLOCATION", font="rectangles"),
        "yellow", attrs=["bold"])
+    usage = __doc__
+    cprint(usage, "blue")
 
 class AmityRoomAllocations(cmd.Cmd):
-    prompt = "Amity&>>>"
+    prompt = "Amity&>>> "
 
     @docopt_cmd
     def do_create_room(self, args):
