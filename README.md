@@ -41,7 +41,7 @@ The application has the following functionality
     to be used. 
 * Loading from a text file
     * Just like the load state, people can be loaded into the system from a text file if it follows the format below:
-           ``` 
+           
             OLUWAFEMI SULE FELLOW Y
             DOMINIC WALTERS STAFF
             SIMON PATTERSON FELLOW Y
@@ -49,7 +49,7 @@ The application has the following functionality
             LEIGH RILEY STAFF
             TANA LOPEZ FELLOW Y
             KELLY McGUIRE STAFF
-            ```
+            
 
 ###Command doc 
 * This is the command document for the application 
