@@ -232,10 +232,12 @@ class Amity(object):
             return "There are no unallocated persons"
         for person in unallocated:
             if filename == None:
+                print("Unallocated Office:")
                 print(person)
             else:
                 #write out to the specified file 
                 with open("./datafiles/"+filename, "w") as output:
+                    output.write("Unallocated Office")
                     output.write(person)
 
     def save_state(database_name=None):
