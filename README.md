@@ -53,7 +53,7 @@ The application has the following functionality
 
 ###Command doc 
 * This is the command document for the application 
-            ```
+            
             Usage:
                 create_room <room_name>...
                 add_person <first_name> <last_name> <title> [--wa=N]
@@ -72,4 +72,4 @@ The application has the following functionality
                 --o Output into a specified file
                 --db Specify a database path
                 --wa Specify wants accommodation 
-            ```
+            
