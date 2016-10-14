@@ -1,10 +1,12 @@
 import os.path
+#import .path only 
 import unittest
 
 from classes.amity import Amity
 from classes.person import Person
 from unittest.mock import patch
 from unittest.mock import PropertyMock, MagicMock
+#merge these lines above
 
 class AmityTest(unittest.TestCase):
     
@@ -14,6 +16,7 @@ class AmityTest(unittest.TestCase):
     def test_object_of(self):
         obj = Amity()
         self.assertEqual(True, type(obj) is Amity)
+        #use assert True
     
     def test_create_room(self):
         #test that create room creates both offices and livingspaces
@@ -22,7 +25,8 @@ class AmityTest(unittest.TestCase):
         Amity.create_room("Oculus", "office")
         self.assertEqual(len(Amity.offices), 1)
         self.assertIn("Oculus", Amity.offices.keys())
-    
+        #you should have a patch here
+
         self.assertEqual(len(Amity.livingspaces), 0)
         Amity.create_room("Python", "livingspace")
         self.assertEqual(len(Amity.livingspaces), 1)
@@ -51,6 +55,7 @@ class AmityTest(unittest.TestCase):
             Amity.create_room("Python", "livingspace")
         Amity.assign_livingspace(mock_fellow)
         self.assertEqual(len(Amity.livingspaces["Python"].current_occupants), 1)
+        #return a value that is accessible by a . something 
 
     @patch("builtins.input", lambda x : 'ST-01')
     def test_cant_assign_rooms_full(self):
