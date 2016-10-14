@@ -1,26 +1,20 @@
 import unittest
 
-from rooms.room import Room
-from people.staff import Staff
-from people.fellow import Fellow
-from buildings.amity import Amity
+from classes.room import Room
 
 
 class RoomTest(unittest.TestCase):
-    
-    def setup(self):
-        pass
         
     def test_object_of(self):
         obj = Room("name")
-        self.assertEqual(True, type(obj) is Room)
+        self.assertTrue(type(obj) is Room)
 
-    def test_can_search_room(self):
-        #test that you can search for a room and its information
-        Amity.create_room("Oculus", "office")
-        result = Room.search("Oculus")
-        self.assertIn("ROOM: Oculus\nTYPE: office", result)
-    
+    def test_print_room(self):
+        #test can print occupants of the room 
+        oculus = Room("Oculus")
+        oculus.current_occupants.append("Samuel Gaamuwa")
+        result = oculus.print_room()
+        self.assertEqual("Room Oculus printed", result)
 
 if __name__ == '__main__':
     unittest.main()

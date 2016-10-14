@@ -1,16 +1,13 @@
 import unittest
 
-from people.staff import Staff
+from classes.person import Staff
 
 
 class StaffTest(unittest.TestCase):
     
-    def setup(self):
-        pass
-    
     def test_object_of(self):
-        obj = Staff("name")
-        self.assertEqual(True, type(obj) is Staff) 
+        obj = Staff("Samuel", "Gaamuwa", "ST-01")
+        self.assertTrue(type(obj) is Staff) 
 
 
 if __name__ == '__main__':

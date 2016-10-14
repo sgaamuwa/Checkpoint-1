@@ -18,7 +18,9 @@ class Room(object):
         print("-"*80)
         print("\n")
         for person in self.current_occupants:
-            print(person + ", ", end=" ")
+            print(person + ", ")
+
+        return "Room {} printed".format(self.name)
 
 
 class Office(Room):
