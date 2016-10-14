@@ -49,9 +49,16 @@ class Amity(object):
             person = Staff(fname, lname, staff_id)
             Amity.assign_room(person)
             Amity.staff[person.staff_id] = person
-        
-        return "{} {} added and assigned to {}".format(person.first_name, 
+        #determine what to return for office name
+        return_message = ""
+        if person.allocated_office == "":
+            return_message = "{} {} added but not assigned room".format(person.first_name, 
+                                                                        person.last_name)
+        else:
+            return_message = "{} {} added and assigned to {}".format(person.first_name, 
                                 person.last_name, person.allocated_office)
+
+        return return_message
 
     def validate_staff_id(staff_id):
         """determines that the staff id is not in the system"""
@@ -230,14 +237,13 @@ class Amity(object):
                 unallocated.append(person.first_name +" "+ person.last_name)
         if len(unallocated) == 0:
             return "There are no unallocated persons"
+        print("People not allocated offices: ")
         for person in unallocated:
             if filename == None:
-                print("Unallocated Office:")
                 print(person)
             else:
                 #write out to the specified file 
                 with open("./datafiles/"+filename, "w") as output:
-                    output.write("Unallocated Office")
                     output.write(person)
 
     def save_state(database_name=None):

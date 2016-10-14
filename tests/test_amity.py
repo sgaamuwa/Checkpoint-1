@@ -2,11 +2,9 @@ import os.path
 import unittest
 
 from classes.amity import Amity
-from classes.person import Fellow
 from classes.person import Person
-from classes.person import Staff
 from unittest.mock import patch
-from unittest.mock import PropertyMock
+from unittest.mock import PropertyMock, MagicMock
 
 class AmityTest(unittest.TestCase):
     
@@ -42,45 +40,51 @@ class AmityTest(unittest.TestCase):
             Amity.add_person("Samuel", "Gaamuwa", "FELLOW")
             self.assertEqual(len(Amity.fellows), 1)
     
-    def test_assigns_livingspace(self):
+    @patch("classes.room.LivingSpace")
+    @patch("classes.person.Fellow")
+    def test_assigns_livingspace(self, mock_fellow, mock_lspace):
         #test assigns room if requested
-        Amity.create_room("Python", "livingspace")
-        sam = Fellow("Samuel", "Gaamuwa", "ST-01")
-        Amity.assign_livingspace(sam)
-        self.assertEqual(sam.allocated_livingspace, "Python")
+        mock_fellow.return_value = MagicMock(first_name="Samuel", last_name="Gaamuwa",
+        staff_id="ST-01", allocated_office="Narnia", allocated_livingspace="")
+        mock_lspace.return_value = MagicMock(name="Python", current_occupants=[])
+        with patch("classes.room.LivingSpace") as patched_office:
+            Amity.create_room("Python", "livingspace")
+        Amity.assign_livingspace(mock_fellow)
+        self.assertEqual(len(Amity.livingspaces["Python"].current_occupants), 1)
 
-    
+    @patch("builtins.input", lambda x : 'ST-01')
     def test_cant_assign_rooms_full(self):
         #test that new people cant be randomly assigned to full rooms
-        #the save function in person automatically calls the assign room function 
-        Amity.create_room("Oculus", "office")
-        Amity.offices["Oculus"].current_occupants = ["Rehema Tadaa",
-        "Ruth Tadaa", "Arnold Tadaa", "Whitney Tadaa", "Kimani Tadaa", "Migwi T"]
-        sam = Staff("Samuel", "Gaamuwa", "ST-01")
-        result = Amity.assign_room(sam)
-        self.assertEqual("All current rooms are full", result)
+        #the save function in person automatically calls the assign room function
+        with patch("classes.room.Office") as patched_office: 
+            Amity.create_room("Oculus", "office")
+            with patch("classes.person.Staff") as patched_staff:
+                Amity.offices["Oculus"].current_occupants = ["Rehema Tadaa",
+                "Ruth Tadaa", "Arnold Tadaa", "Whitney Tadaa", "Kimani Tadaa", "Migwi T"]
+                result = Amity.add_person("Samuel", "Gaamuwa", "STAFF")
+                self.assertEqual("Samuel Gaamuwa added but not assigned room", result)
     
-    def test_reallocates_person(self):
+    @patch("classes.room.Office")
+    @patch("classes.person.Fellow")
+    def test_reallocates_person(self, mock_fellow, mock_office):
         #tests that people are reallocated to requested rooms 
-        Amity.create_room("Narnia", "office")
-        sam = Staff("Samuel", "Gaamuwa", "ST-01")
-        sam.allocated_office = "Narnia"
-        Amity.offices["Narnia"].current_occupants.append("Samuel Gaamuwa")
-        Amity.create_room("Valhala", "office")
-        print(Amity.offices)
-        Amity.reallocate(sam, "Valhala")
-        self.assertNotIn("Samuel Gaamuwa", Amity.offices["Narnia"].current_occupants)
-        self.assertIn("Samuel Gaamuwa", Amity.offices["Valhala"].current_occupants)
+        mock_fellow.return_value = MagicMock(first_name="Samuel", last_name="Gaamuwa",
+        staff_id="ST-01", allocated_office="Narnia")
+        # mock_office.return_value = MagicMock(name="Oculus", current_occupants=[])
+        with patch("classes.amity.Office") as patched_office:
+            Amity.create_room("Oculus", "office")
+        Amity.reallocate(mock_fellow, "Oculus")
+        self.assertEqual(len(mock_office.current_occupants), 1)
     
-    def test_prints_allocations(self):
-        #test it prints rooms and those allocated to them
-        Amity.print_allocations("test_out.txt")
-        self.assertTrue(os.path.isfile("../datafiles/test_out.text"))
+    # def test_prints_allocations(self):
+    #     #test it prints rooms and those allocated to them
+    #     Amity.print_allocations("test_out.txt")
+    #     self.assertTrue(os.path.isfile("../datafiles/test_out.text"))
     
-    # def test_saves_state(self):
-    #     #test that information can be stored in a new specified database
-    #     Amity.save_state("new_database")
-    #     self.assertTrue(os.path.isfile("../new_database"))
+    def test_saves_state(self):
+        #test that information can be stored in a new specified database
+        Amity.save_state("new_database")
+        self.assertTrue(os.path.isfile("./new_database"))
     
     # def test_loads_state(self):
     #     #test that it loads data from specified database
