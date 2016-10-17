@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from classes.amity import Amity
@@ -12,20 +13,15 @@ class AmityTest(unittest.TestCase):
         self.assertEqual(True, type(obj) is Amity)
         #use assert True
     
-    @patch.dict("classes.amity.Amity.offices", {})
-    def test_create_room(self, mock_dict):
+    def test_create_room(self):
         #test that create room creates both offices and livingspaces
         #query the dictionaries to see the rooms are created
         with patch("classes.amity.Office") as patched_office:
-            self.assertEqual(len(Amity.offices), 0)
             Amity.create_room("Oculus", "office")
-            self.assertEqual(len(Amity.offices), 1)
             self.assertIn("Oculus", Amity.offices.keys())
         #do the same for livingspace
         with patch("classes.amity.LivingSpace") as patched_lspace:
-            self.assertEqual(len(Amity.livingspaces), 0)
             Amity.create_room("Python", "livingspace")
-            self.assertEqual(len(Amity.livingspaces), 1)
             self.assertIn("Python", Amity.livingspaces.keys())
         
     @patch("builtins.input", side_effect=["Samuel", "Gaamuwa", 'ST-01'])
@@ -123,11 +119,15 @@ class AmityTest(unittest.TestCase):
         Amity.print_unallocated("unallocated.txt")
         self.assertTrue(path.isfile("./datafiles/unallocated.txt"))
     
-    # @patch("classes.amity.DatabaseConnections")
-    # def test_saves_state(self, mock_data):
-    #     #test that information can be stored in a new specified database
-    #     Amity.save_state("new_database")
-    #     self.assertTrue(os.path.isfile("./new_database"))
+    @patch("classes.amity.DatabaseConnections")
+    def test_saves_state(self, mock_db):
+        mock_db.database_insert_livingspace.return_value = None
+        mock_db.database_insert_office.return_value = None
+        mock_db.database_insert_fellow.return_value = None
+        mock_db.database_insert_staff.return_value = None
+        #test that information can be stored in a new specified database
+        Amity.save_state("new_database")
+        self.assertTrue(os.path.isfile("./new_database"))
 
     @patch("classes.amity.DatabaseConnections")
     def test_loads_state(self, mock_data):

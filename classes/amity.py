@@ -122,6 +122,7 @@ class Amity(object):
 
         #create available rooms and append rooms with space to it 
         if len(Amity.livingspaces) == 0:
+            person.allocated_livingspace = "no room"
             return "There are no rooms"
         available_livingspaces = []
         for livingspace in Amity.livingspaces.values():
@@ -129,6 +130,7 @@ class Amity(object):
                 available_livingspaces.append(livingspace)
         #if there are no free rooms
         if len(available_livingspaces) == 0:
+            person.allocated_livingspace = "no room"
             return "All current rooms are full"
         else:
             #randomise the choice of the livingspace
@@ -153,9 +155,12 @@ class Amity(object):
         elif person.allocated_office == room_name:
             return "Already allocated to room"
         #remove the person from their current office
-        Amity.offices[person.allocated_office].current_occupants.remove(person.staff_id+" "
-                                                    +person.first_name +" "+ person.last_name)
-        person.allocated_office = office.name
+        if person.allocated_office == "":
+            person.allocated_office = office.name
+        else:
+            Amity.offices[person.allocated_office].current_occupants.remove(person.staff_id+" "
+                                                        +person.first_name +" "+ person.last_name)
+            person.allocated_office = office.name
         #add person to the new selected office
         office.current_occupants.append(person.staff_id+" "+person.first_name +" "+ person.last_name)
         return "{} {} reallocated to {}".format(person.first_name, 
@@ -175,9 +180,13 @@ class Amity(object):
         elif person.allocated_livingspace == room_name:
             return "Already allocated to room"
         #remove the person from their current livingspace
-        Amity.livingspaces[person.allocated_livingspace].current_occupants.remove(person.staff_id+" "
-                                                            +person.first_name +" "+ person.last_name)
-        person.allocated_livingspace = lspace.name
+        print(person.allocated_livingspace)
+        if person.allocated_livingspace == "no room" or person.allocated_livingspace == "":
+            person.allocated_livingspace = lspace.name
+        else:
+            Amity.livingspaces[person.allocated_livingspace].current_occupants.remove(person.staff_id+" "
+                                                                +person.first_name +" "+ person.last_name)
+            person.allocated_livingspace = lspace.name
         #add person to the new selected livingspace
         lspace.current_occupants.append(person.staff_id+" "+person.first_name +" "+ person.last_name)
         return "{} {} reallocated to {}".format(person.first_name, 
@@ -236,9 +245,23 @@ class Amity(object):
             if person.allocated_office == "":
                 unallocated.append(person.first_name +" "+ person.last_name)
         if len(unallocated) == 0:
-            return "There are no unallocated persons"
+            print("There are no people not allocated offices")
         print("People not allocated offices: ")
         for person in unallocated:
+            if filename == None:
+                print(person)
+            else:
+                #write out to the specified file 
+                with open("./datafiles/"+filename, "w") as output:
+                    output.write(person)
+        unallocated_ls = []
+        for person in Amity.fellows.values():
+            if person.allocated_livingspace == "no room":
+                unallocated_ls.append(person.first_name +" "+ person.last_name)
+        if len(unallocated_ls) == 0:
+            print("There are no people not allocated livingspaces")
+        print("People not allocated living spaces: ")
+        for person in unallocated_ls:
             if filename == None:
                 print(person)
             else:
