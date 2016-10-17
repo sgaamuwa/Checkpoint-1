@@ -20,6 +20,8 @@ class Room(object):
         for person in self.current_occupants:
             print(person + ", ", end=" ")
 
+        return "Room {} printed".format(self.name)
+
 
 class Office(Room):
     """Office class

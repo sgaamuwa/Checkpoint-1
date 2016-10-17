@@ -1,12 +1,9 @@
 import unittest
 
-from rooms.livingspace import LivingSpace
+from classes.room import LivingSpace
 
 
 class LivingSpaceTest(unittest.TestCase):
-    
-    def setup(self):
-        pass
     
     def test_object_of(self):
         obj = LivingSpace("name")
