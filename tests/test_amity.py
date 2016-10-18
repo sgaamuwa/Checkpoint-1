@@ -4,7 +4,7 @@ import unittest
 from classes.amity import Amity
 from os import path
 from unittest.mock import patch, PropertyMock, MagicMock, Mock
-
+#from unittest import TestCase, Mock
 
 class AmityTest(unittest.TestCase):
        
@@ -148,6 +148,10 @@ class AmityTest(unittest.TestCase):
         mock_db.database_insert_office.return_value = None
         mock_db.database_insert_fellow.return_value = None
         mock_db.database_insert_staff.return_value = None
+        mock_db.database_return_fellow_ids.return_value =[]
+        mock_db.database_return_staff_ids.return_value = []
+        mock_db.database_update_fellow.return_value = None
+        mock_db.database_update_staff.return_value = None
         #test that information can be stored in a new specified database
         Amity.save_state("new_database")
         self.assertTrue(os.path.isfile("./new_database"))
