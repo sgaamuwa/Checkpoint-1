@@ -66,7 +66,7 @@ class AmityTest(unittest.TestCase):
         #return a value that is accessible by a . something 
 
     @patch("builtins.input", side_effect=["Samuel", "Gaamuwa", 'ST-01'])
-    def test_cant_assign_rooms_full(self, input):
+    def test_cant_assign_office_full(self, input):
         #test that new people cant be randomly assigned to full rooms
         #the save function in person automatically calls the assign room function
         with patch("classes.room.Office") as patched_office: 
@@ -76,10 +76,10 @@ class AmityTest(unittest.TestCase):
                 "Ruth Tadaa", "Arnold Tadaa", "Whitney Tadaa", "Kimani Tadaa", "Migwi T"]
                 result = Amity.add_person("Samuel", "Gaamuwa", "STAFF")
                 self.assertEqual("Samuel Gaamuwa added but not assigned room", result)
-    
+
     @patch("classes.room.Office")
     @patch("classes.person.Fellow")
-    def test_reallocates_person(self, mock_fellow, mock_office):
+    def test_reallocates_office(self, mock_fellow, mock_office):
         #tests that people are reallocated to requested rooms 
         #mock the fellow object 
         mock_fellow = Mock()
@@ -91,7 +91,7 @@ class AmityTest(unittest.TestCase):
         #mock the oculus office object and add to amity offices
         mock_office = Mock()
         mock_office.name = "Narnia"
-        mock_office.current_occupants = ["Samuel Gaamuwa"]
+        mock_office.current_occupants = ["FL-01 Samuel Gaamuwa"]
         #add the mock object to the offices dictionary 
         Amity.offices["Narnia"] = mock_office
         with patch("classes.room.Office") as patched_office:
@@ -99,6 +99,29 @@ class AmityTest(unittest.TestCase):
         self.assertEqual(mock_fellow.allocated_office, "Narnia")
         Amity.reallocate(mock_fellow, "Valhala")
         self.assertEqual(mock_fellow.allocated_office, "Valhala")
+
+    @patch("classes.room.LivingSpace")
+    @patch("classes.person.Fellow")
+    def test_reallocates_lspace(self, mock_fellow, mock_lspace):
+        #tests that people are reallocated to requested rooms 
+        #mock the fellow object 
+        mock_fellow = Mock()
+        mock_fellow.first_name = "Samuel"
+        mock_fellow.last_name = "Gaamuwa"
+        mock_fellow.staff_id = "FL-01"
+        mock_fellow.allocated_office = "Narnia"
+        mock_fellow.allocated_livingspace = "Python"
+        #mock the python livingspace object and add to amity livingspaces
+        mock_office = Mock()
+        mock_office.name = "Python"
+        mock_office.current_occupants = ["FL-01 Samuel Gaamuwa"]
+        #add the mock object to the livingspaces dictionary 
+        Amity.livingspaces["Python"] = mock_lspace
+        with patch("classes.room.LivingSpace") as patched_lspace:
+            Amity.create_room("Ruby", "livingspace")
+        self.assertEqual(mock_fellow.allocated_livingspace, "Python")
+        Amity.reallocate_ls(mock_fellow, "Ruby")
+        self.assertEqual(mock_fellow.allocated_livingspace, "Ruby")
     
     def test_prints_allocations(self):
         #test it prints rooms and those allocated to them
@@ -120,6 +143,7 @@ class AmityTest(unittest.TestCase):
     
     @patch("classes.amity.DatabaseConnections")
     def test_saves_state(self, mock_db):
+        #test that it saves state to a specified database
         mock_db.database_insert_livingspace.return_value = None
         mock_db.database_insert_office.return_value = None
         mock_db.database_insert_fellow.return_value = None
