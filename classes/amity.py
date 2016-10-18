@@ -19,8 +19,7 @@ class Amity(object):
         """creates a room depending on the type specified"""
 
         #sheck if room is already in the system
-        if (name.lower() in (key.lower() for key in Amity.offices.keys()) 
-        or name.lower() in (key.lower() for key in Amity.livingspaces.keys())):
+        if(name.lower() in (key.lower() for room in [Amity.offices.keys(), Amity.livingspaces.keys()] for key in room)):
             return "Room already exists"
         #create room object and add it to respective dictionary
         elif kind == "office":
@@ -81,7 +80,10 @@ class Amity(object):
             Amity.offices[office].current_occupants.append(staff_id+" "+fname+" "+lname)
         #add person to livingspace they are allocated to in database
         if livingspace is not "" and livingspace is not None:
-            Amity.livingspaces[livingspace].current_occupants.append(staff_id+" "+fname+" "+lname)
+            if livingspace == "no room":
+                return "not allocated room"
+            else:
+                Amity.livingspaces[livingspace].current_occupants.append(staff_id+" "+fname+" "+lname)
 
     def add_staff_from_database(fname, lname, staff_id, office=None):
         """adds a fellow from the database to the working dataset"""
@@ -175,7 +177,7 @@ class Amity(object):
         else:
             return "Room doesn't exist"
         #if the room is full
-        if len(lspace.current_occupants) == 6:
+        if len(lspace.current_occupants) == 4:
             return "The room is full"
         elif person.allocated_livingspace == room_name:
             return "Already allocated to room"
@@ -279,20 +281,35 @@ class Amity(object):
             #otherwise use the specified name
             database = DatabaseConnections(database_name)
         for room in Amity.livingspaces.values():
-            database.database_insert_livingspace(room.name)
+            if room.name in database.database_return_all_livingspaces():
+                continue
+            else:
+                database.database_insert_livingspace(room.name)
         for room in Amity.offices.values():
-            database.database_insert_office(room.name)
+            if room.name in database.database_return_all_offices():
+                continue
+            else:
+                database.database_insert_office(room.name)
         for person in Amity.fellows.values():
-            database.database_insert_fellow(person.first_name,
-                                            person.last_name,
-                                            person.staff_id,
-                                            person.allocated_office,
-                                            person.allocated_livingspace)
+            if person.staff_id in database.database_return_fellow_ids():
+                database.database_update_fellow(person.staff_id, 
+                                                person.allocated_office,
+                                                person.allocated_livingspace)
+            else:
+                database.database_insert_fellow(person.first_name,
+                                                person.last_name,
+                                                person.staff_id,
+                                                person.allocated_office,
+                                                person.allocated_livingspace)
         for person in Amity.staff.values():
-            database.database_insert_staff(person.first_name,
-                                            person.last_name,
-                                            person.staff_id,
-                                            person.allocated_office)
+            if person.staff_id in database.database_return_staff_ids():
+                database.database_update_staff(person.staff_id, 
+                                                person.allocated_office)
+            else:
+                database.database_insert_staff(person.first_name,
+                                                person.last_name,
+                                                person.staff_id,
+                                                person.allocated_office)
         return "Working data set saved to {} database".format(database_name)
 
     def load_state(database_name):

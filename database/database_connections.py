@@ -96,23 +96,21 @@ class DatabaseConnections(object):
         self.session.query(LivingSpace).filter_by(name=name).delete()
         self.session.commit()
 
-    def database_update_staff(self, fname, lname, office):
+    def database_update_staff(self, staff_id, office):
         """Update function
 
         This function updates the office of a staff in the database
         """
-        staff = self.session.query(Staff).filter_by(first_name=fname, 
-                                                    last_name=lname).first()
+        staff = self.session.query(Staff).filter_by(staff_id=staff_id).first()
         staff.allocated_office = office
         self.session.commit()
 
-    def database_update_fellow(self, fname, lname, office, livingspace):
+    def database_update_fellow(self, staff_id, office, livingspace):
         """Update function
 
         This function updates the office or livingspace of a fellow in the database
         """
-        fellow = self.session.query(Fellow).filter_by(first_name=fname, 
-                                                    last_name=lname).first()
+        fellow = self.session.query(Fellow).filter_by(staff_id=staff_id).first()
         fellow.allocated_office =office
         fellow.allocated_livingspace = livingspace
         self.session.commit()
@@ -140,6 +138,28 @@ class DatabaseConnections(object):
             results.append((row.first_name, row.last_name, row.staff_id,
             row.allocated_office, row.allocated_livingspace))
         return results
+    
+    def database_return_fellow_ids(self):
+        """Retrieve function
+        
+        This function returns all fellow ids in the database
+        """
+        results = []
+        rows = self.session.query(Fellow).all()
+        for row in rows:
+            results.append(row.staff_id)
+        return results
+    
+    def database_return_staff_ids(self):
+        """Retrieve function
+
+        This function returns all fellow ids in the database
+        """
+        results = []
+        rows = self.session.query(Staff).all()
+        for row in rows:
+            results.append(row.staff_id)
+        return results
 
     def database_return_all_offices(self):
         """Retrieve function
@@ -149,7 +169,7 @@ class DatabaseConnections(object):
         results = []
         rows = self.session.query(Office).all()
         for row in rows:
-            results.append((row.name))
+            results.append(row.name)
         return (results)
 
     def database_return_all_livingspaces(self):
@@ -160,5 +180,5 @@ class DatabaseConnections(object):
         results = []
         rows = self.session.query(LivingSpace).all()
         for row in rows:
-            results.append((row.name))
+            results.append(row.name)
         return results
