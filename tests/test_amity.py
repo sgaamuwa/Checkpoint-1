@@ -10,8 +10,7 @@ class AmityTest(unittest.TestCase):
        
     def test_object_of(self):
         obj = Amity()
-        self.assertEqual(True, type(obj) is Amity)
-        #use assert True
+        self.assertTrue(type(obj) is Amity)
     
     def test_create_room(self):
         #test that create room creates both offices and livingspaces

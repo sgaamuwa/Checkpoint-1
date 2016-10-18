@@ -7,7 +7,7 @@ class LivingSpaceTest(unittest.TestCase):
     
     def test_object_of(self):
         obj = LivingSpace("name")
-        self.assertEqual(True, type(obj) is LivingSpace)
+        self.assertTrue(type(obj) is LivingSpace)
 
 if __name__ == '__main__':
     unittest.main()
