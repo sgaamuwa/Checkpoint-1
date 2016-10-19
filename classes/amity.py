@@ -1,4 +1,4 @@
-import os 
+import os
 import random
 
 from database.database_connections import DatabaseConnections
@@ -55,7 +55,8 @@ class Amity(object):
                                                                         person.last_name)
         else:
             return_message = "{} {} added and assigned to {}".format(person.first_name, 
-                                person.last_name, person.allocated_office)
+                                                                    person.last_name, 
+                                                                    person.allocated_office)
 
         return return_message
 
@@ -63,6 +64,7 @@ class Amity(object):
         """determines that the staff id is not in the system"""
 
         if staff_id in Amity.fellows.keys() or staff_id in Amity.staff.keys():
+            #add the lists to loop once
             print("Staff Id already exists")
             staff_id = input("Enter another staff id: ")
             Amity.validate_staff_id(staff_id) 
@@ -144,6 +146,7 @@ class Amity(object):
         Amity.livingspaces[random_livingspace.name] = random_livingspace
 
     def reallocate(person, room_name):
+        #combine the two reallocate functions 
         """assigns a person to the specified room if it is free"""
 
         #check for the room in the rooms list 

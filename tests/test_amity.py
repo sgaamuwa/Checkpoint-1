@@ -1,4 +1,3 @@
-import os
 import unittest
 
 from classes.amity import Amity
@@ -154,7 +153,7 @@ class AmityTest(unittest.TestCase):
         mock_db.database_update_staff.return_value = None
         #test that information can be stored in a new specified database
         Amity.save_state("new_database")
-        self.assertTrue(os.path.isfile("./new_database"))
+        self.assertTrue(path.isfile("./new_database"))
 
     @patch("classes.amity.DatabaseConnections")
     def test_loads_state(self, mock_data):
