@@ -33,9 +33,9 @@ class Amity(object):
     def add_person(fname, lname, title, wants_accommodation=None):
         """creates a new person basing on their specified type"""
 
-        staff_id = input("Enter {} {}'s staff id: ".format(fname, lname))
+        initial_id = input("Enter {} {}'s staff id: ".format(fname, lname))
         #calls the validate staff id to ensure it is unique
-        Amity.validate_staff_id(staff_id)
+        staff_id = Amity.validate_staff_id(initial_id)
         #check if the person is staff or fellow
         if title == "FELLOW":
             person = Fellow(fname, lname, staff_id)
@@ -68,6 +68,8 @@ class Amity(object):
             print("Staff Id already exists")
             staff_id = input("Enter another staff id: ")
             Amity.validate_staff_id(staff_id) 
+
+        return staff_id
     
     def add_fellow_from_database(fname, lname, staff_id, office=None, livingspace=None):
         """adds a fellow from the database to the working dataset"""
