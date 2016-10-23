@@ -25,7 +25,6 @@ Options:
 
 
 import cmd
-import os 
 
 from classes.amity import Amity
 from docopt import docopt, DocoptExit
@@ -111,16 +110,21 @@ class AmityRoomAllocations(cmd.Cmd):
         person = args["<person_identifier>"]
         room = args["<new_room_name>"]
 
+        if person in Amity.fellows.keys():
+            perp = Amity.fellows[person]
+        elif person in Amity.staff.keys():
+            perp = Amity.staff[person]
         if room in Amity.offices.keys():
-            if person in Amity.fellows.keys():
-                print(Amity.reallocate(Amity.fellows[person], room))
-            elif person in Amity.staff.keys():
-                print(Amity.reallocate(Amity.staff[person], room))
+            print(Amity.reallocate(perp, room, "office"))
         elif room in Amity.livingspaces.keys():
-            if person in Amity.fellows.keys():
-                print(Amity.reallocate_ls(Amity.fellows[person], room))
-            elif person in Amity.staff.keys():
+            room_type = "livingspace"
+            if person in Amity.staff.keys():
                 print("Staff don't have livingspaces")
+            else:
+                print(Amity.reallocate(perp, room, "livingspace"))
+        else:
+            print("Room does not exist")
+        
 
     @docopt_cmd
     def do_load_people(self, args):

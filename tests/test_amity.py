@@ -45,7 +45,7 @@ class AmityTest(unittest.TestCase):
         with patch("classes.room.Office") as patched_office:
             Amity.create_room("Oculus", "office")
         self.assertEqual(mock_staff.allocated_office, "")
-        Amity.assign_room(mock_staff)
+        Amity.assign_office(mock_staff)
         self.assertEqual(mock_staff.allocated_office, "Oculus")
     
     def test_assigns_livingspace(self):
