@@ -1,4 +1,3 @@
-import os
 import random
 
 from database.database_connections import DatabaseConnections
@@ -18,16 +17,14 @@ class Amity(object):
     def create_room(name, kind):
         """creates a room depending on the type specified"""
 
-        #sheck if room is already in the system
+        #check if room is already in the system
         if(name.lower() in (key.lower() for room in [Amity.offices.keys(), Amity.livingspaces.keys()] for key in room)):
             return "Room already exists"
         #create room object and add it to respective dictionary
         elif kind == "office":
-            room = Office(name)
-            Amity.offices[name] = room
+            Amity.offices[name] = Office(name)
         elif kind == "livingspace":
-            room = LivingSpace(name)
-            Amity.livingspaces[name] = room
+            Amity.livingspaces[name] = LivingSpace(name)
         return "Room {} has been created".format(name)
 
     def add_person(fname, lname, title, wants_accommodation=None):
@@ -39,26 +36,23 @@ class Amity(object):
         #check if the person is staff or fellow
         if title == "FELLOW":
             person = Fellow(fname, lname, staff_id)
-            Amity.assign_room(person)
+            Amity.assign_office(person)
             #if wants accommodation assign livingspace
             if wants_accommodation == "Y":
                 Amity.assign_livingspace(person)
             Amity.fellows[person.staff_id] = person
         if title == "STAFF":
             person = Staff(fname, lname, staff_id)
-            Amity.assign_room(person)
+            Amity.assign_office(person)
             Amity.staff[person.staff_id] = person
         #determine what to return for office name
-        return_message = ""
         if person.allocated_office == "":
-            return_message = "{} {} added but not assigned room".format(person.first_name, 
-                                                                        person.last_name)
+            return "{} {} added but not assigned room".format(person.first_name, 
+                                                                person.last_name)
         else:
-            return_message = "{} {} added and assigned to {}".format(person.first_name, 
-                                                                    person.last_name, 
-                                                                    person.allocated_office)
-
-        return return_message
+            return "{} {} added and assigned to {}".format(person.first_name, 
+                                                            person.last_name, 
+                                                            person.allocated_office)
 
     def validate_staff_id(staff_id):
         """determines that the staff id is not in the system"""
@@ -80,10 +74,10 @@ class Amity(object):
         fellow.allocated_office = office
         Amity.fellows[fellow.staff_id] = fellow
         #add person to office they are allocated to in the database
-        if office is not "" and office is not None:
+        if office is not "" or None:
             Amity.offices[office].current_occupants.append(staff_id+" "+fname+" "+lname)
         #add person to livingspace they are allocated to in database
-        if livingspace is not "" and livingspace is not None:
+        if livingspace is not "" or None:
             if livingspace == "no room":
                 return "not allocated room"
             else:
@@ -97,10 +91,10 @@ class Amity(object):
         staff.allocated_office = office
         Amity.staff[staff.staff_id] = staff
         #add person to allocated room 
-        if office is not "" and office is not None:
+        if office is not "" or None:
             Amity.offices[office].current_occupants.append(staff_id+" "+fname+" "+lname)
 
-    def assign_room(person):
+    def assign_office(person):
         """randomly assigns a room to the person that it is passed"""
 
         #create available rooms and append rooms with space to it 
@@ -147,57 +141,39 @@ class Amity(object):
         #update the room object in the dictionary
         Amity.livingspaces[random_livingspace.name] = random_livingspace
 
-    def reallocate(person, room_name):
+    def reallocate(person, room_name, room_type):
         #combine the two reallocate functions 
         """assigns a person to the specified room if it is free"""
-
+        if room_type == "office":
+            room_dict = Amity.offices
+            current_room = person.allocated_office
+        elif room_type ==  "livingspace":
+            room_dict = Amity.livingspaces
+            current_room = person.allocated_livingspace
         #check for the room in the rooms list 
-        if room_name in Amity.offices.keys():
-            office = Amity.offices[room_name]
-        else:
-            return "Room doesn't exist"
+        if room_name in room_dict.keys():
+            room = room_dict[room_name]
         #if the room is full
-        if len(office.current_occupants) == 6:
+        if len(room.current_occupants) == room.max_occupants:
             return "The room is full"
-        elif person.allocated_office == room_name:
+        elif current_room == room_name:
             return "Already allocated to room"
         #remove the person from their current office
-        if person.allocated_office == "":
-            person.allocated_office = office.name
+        if current_room == "no room" or current_room == "":
+            if room_type == "office":
+                person.allocated_office = room.name
+            elif room_type == "livingspace":
+                person.allocated_livingspace = room.name
         else:
-            Amity.offices[person.allocated_office].current_occupants.remove(person.staff_id+" "
-                                                        +person.first_name +" "+ person.last_name)
-            person.allocated_office = office.name
+            room_dict[current_room].current_occupants.remove(person.staff_id +" "
+                                                            +person.first_name +" "
+                                                            +person.last_name)
+            current_room = room.name
         #add person to the new selected office
-        office.current_occupants.append(person.staff_id+" "+person.first_name +" "+ person.last_name)
+        room.current_occupants.append(person.staff_id+" "+person.first_name +" "+ person.last_name)
         return "{} {} reallocated to {}".format(person.first_name, 
-                                        person.last_name, office.name)
-    
-    def reallocate_ls(person, room_name):
-        """assigns a person to the specified room if it is free"""
-
-        #check for the room in the rooms list 
-        if room_name in Amity.livingspaces.keys():
-            lspace = Amity.livingspaces[room_name]
-        else:
-            return "Room doesn't exist"
-        #if the room is full
-        if len(lspace.current_occupants) == 4:
-            return "The room is full"
-        elif person.allocated_livingspace == room_name:
-            return "Already allocated to room"
-        #remove the person from their current livingspace
-        print(person.allocated_livingspace)
-        if person.allocated_livingspace == "no room" or person.allocated_livingspace == "":
-            person.allocated_livingspace = lspace.name
-        else:
-            Amity.livingspaces[person.allocated_livingspace].current_occupants.remove(person.staff_id+" "
-                                                                +person.first_name +" "+ person.last_name)
-            person.allocated_livingspace = lspace.name
-        #add person to the new selected livingspace
-        lspace.current_occupants.append(person.staff_id+" "+person.first_name +" "+ person.last_name)
-        return "{} {} reallocated to {}".format(person.first_name, 
-                                        person.last_name, lspace.name)
+                                                person.last_name, 
+                                                room.name)
 
     def print_allocations(filename=None):
         """returns a printout of all rooms and persons assigned to them"""
@@ -206,38 +182,23 @@ class Amity(object):
         if len(Amity.offices) == 0 and len(Amity.livingspaces) == 0:
             return "There are no rooms in the system"
         #check if the filename is empty and print on the screen
+        text = ""
+        for office in Amity.offices.values():
+            text = text + office.name + "(office)\n" + "-"*80 + "\n"
+            for person in office.current_occupants:
+                text = text + person + ", "
+            text = text + "\n\n"
+        for livingspace in Amity.livingspaces.values():
+            text = text + livingspace.name + "(livingspace)\n" + "-"*80 + "\n"
+            for person in livingspace.current_occupants:
+                text = text + person + ", "
+            text = text + "\n\n"
         if filename == None:
-            for office in Amity.offices.values():
-                print(office.name+"(office)\n")
-                print("-"*80)
-                print("\n")
-                for person in office.current_occupants:
-                    print(person+", ", end=" ")
-                print("\n\n")
-            for livingspace in Amity.livingspaces.values():
-                print(livingspace.name+"(livingspace)\n")
-                print("-"*80)
-                print("\n")
-                for person in livingspace.current_occupants:
-                    print(person+", ", end=" ") 
-                print("\n\n")
+            print(text) 
         else:
             #write out to the filename listed
             with open("./datafiles/"+filename, "w") as output:
-                for office in Amity.offices.values():
-                    output.write(office.name+"(office)\n")
-                    output.write("-"*70)
-                    output.write("\n")
-                    for person in office.current_occupants:
-                        output.write(person+", ")
-                    output.write("\n\n")
-                for livingspace in Amity.livingspaces.values():
-                    output.write(livingspace.name+"(livingspace)\n")
-                    output.write("-"*70)
-                    output.write("\n")
-                    for person in livingspace.current_occupants:
-                        output.write(person+", ") 
-                    output.write("\n\n")
+                output.write(text)
         return "Rooms all printed"
     
     def print_unallocated(filename=None):
