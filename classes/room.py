@@ -29,7 +29,8 @@ class Office(Room):
     Inherits from the room class and defines offices as 
     specific rooms
     """
-    pass
+    def __init__(self, name):
+        super().__init__(name)
 
    
 class LivingSpace(Room):
