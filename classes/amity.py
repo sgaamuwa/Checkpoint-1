@@ -168,7 +168,10 @@ class Amity(object):
             room_dict[current_room].current_occupants.remove(person.staff_id +" "
                                                             +person.first_name +" "
                                                             +person.last_name)
-            current_room = room.name
+            if room_type == "office":
+                person.allocated_office = room.name
+            elif room_type == "livingspace":
+                person.allocated_livingspace = room.name
         #add person to the new selected office
         room.current_occupants.append(person.staff_id+" "+person.first_name +" "+ person.last_name)
         return "{} {} reallocated to {}".format(person.first_name, 
