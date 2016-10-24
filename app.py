@@ -220,6 +220,7 @@ class AmityRoomAllocations(cmd.Cmd):
             exit()
         elif answer.lower() == "no":
             pass 
+            
 
 if __name__ == "__main__":
     try: 
