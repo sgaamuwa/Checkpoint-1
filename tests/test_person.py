@@ -9,5 +9,6 @@ class PersonTest(unittest.TestCase):
         obj = Person("first", "last", "SD-ID")
         self.assertTrue(type(obj) is Person) 
 
+
 if __name__ == '__main__':
     unittest.main()
