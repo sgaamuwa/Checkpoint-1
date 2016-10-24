@@ -89,10 +89,13 @@ class AmityTest(TestCase):
         mock_office = mock.Mock()
         mock_office.name = "Narnia"
         mock_office.current_occupants = ["FL-01 Samuel Gaamuwa"]
+
+        mock_office2 = mock.Mock()
+        mock_office2.name = "Valhala"
+        mock_office2.current_occupants = []
         #add the mock object to the offices dictionary 
         Amity.offices["Narnia"] = mock_office
-        with mock.patch("classes.room.Office") as patched_office:
-            Amity.create_room("Valhala", "office")
+        Amity.offices["Valhala"] = mock_office2
         self.assertEqual(mock_fellow.allocated_office, "Narnia")
         Amity.reallocate(mock_fellow, "Valhala", "office")
         self.assertEqual(mock_fellow.allocated_office, "Valhala")
@@ -109,12 +112,16 @@ class AmityTest(TestCase):
         mock_fellow.allocated_office = "Narnia"
         mock_fellow.allocated_livingspace = "Python"
         #mock the python livingspace object and add to amity livingspaces
-        mock_office = mock.Mock()
-        mock_office.name = "Python"
-        mock_office.current_occupants = ["FL-01 Samuel Gaamuwa"]
+        mock_lspace = mock.Mock()
+        mock_lspace.name = "Python"
+        mock_lspace.current_occupants = ["FL-01 Samuel Gaamuwa"]
+
+        mock_lspace2 = mock.Mock()
+        mock_lspace2.name = "Ruby"
+        mock_lspace2.current_occupants = []
         #add the mock object to the livingspaces dictionary 
         Amity.livingspaces["Python"] = mock_lspace
-        Amity.create_room("Ruby", "livingspace")
+        Amity.livingspaces["Ruby"] = mock_lspace2
         self.assertEqual(mock_fellow.allocated_livingspace, "Python")
         Amity.reallocate(mock_fellow, "Ruby", "livingspace")
         self.assertEqual(mock_fellow.allocated_livingspace, "Ruby")
