@@ -18,7 +18,8 @@ class Staff(Person):
     Inherits from the person class and defines a person as 
     a spcific staff member in the system
     """
-    pass 
+    def __init__(self, first_name, last_name, staff_id):
+        super().__init__(first_name, last_name, staff_id) 
 
 
 class Fellow(Person):
