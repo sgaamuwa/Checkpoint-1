@@ -16,5 +16,6 @@ class RoomTest(unittest.TestCase):
         result = oculus.print_room()
         self.assertEqual("Room Oculus printed", result)
 
+
 if __name__ == '__main__':
     unittest.main()
