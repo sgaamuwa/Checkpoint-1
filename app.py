@@ -117,7 +117,6 @@ class AmityRoomAllocations(cmd.Cmd):
         if room in Amity.offices.keys():
             print(Amity.reallocate(perp, room, "office"))
         elif room in Amity.livingspaces.keys():
-            room_type = "livingspace"
             if person in Amity.staff.keys():
                 print("Staff don't have livingspaces")
             else:

@@ -12,22 +12,22 @@ class AmityTest(TestCase):
     def test_create_room(self):
         #test that create room creates both offices and livingspaces
         #query the dictionaries to see the rooms are created
-        with mock.patch("classes.amity.Office") as patched_office:
+        with mock.patch("classes.amity.Office"):
             Amity.create_room("Oculus", "office")
             self.assertIn("Oculus", Amity.offices.keys())
         #do the same for livingspace
-        with mock.patch("classes.amity.LivingSpace") as patched_lspace:
+        with mock.patch("classes.amity.LivingSpace"):
             Amity.create_room("Python", "livingspace")
             self.assertIn("Python", Amity.livingspaces.keys())
         
     @mock.patch("builtins.input", side_effect=["Samuel", "Gaamuwa", 'ST-01'])
     def test_adds_person(self, input):
         #test that new people are actually assigned rooms
-        with mock.patch("classes.amity.Staff") as patched_staff:
+        with mock.patch("classes.amity.Staff"):
             self.assertEqual(len(Amity.staff), 0)
             Amity.add_person("Samuel", "Gaamuwa", "STAFF")
             self.assertEqual(len(Amity.staff), 1)
-        with mock.patch("classes.amity.Fellow") as patched_fellow:
+        with mock.patch("classes.amity.Fellow"):
             self.assertEqual(len(Amity.fellows), 0)
             Amity.add_person("Samuel", "Gaamuwa", "FELLOW")
             self.assertEqual(len(Amity.fellows), 1)
@@ -40,7 +40,7 @@ class AmityTest(TestCase):
         mock_staff.last_name = "Gaamuwa"
         mock_staff.staff_id = "ST-01"
         mock_staff.allocated_office = ""
-        with mock.patch("classes.room.Office") as patched_office:
+        with mock.patch("classes.room.Office"):
             Amity.create_room("Oculus", "office")
         self.assertEqual(mock_staff.allocated_office, "")
         Amity.assign_office(mock_staff)
@@ -55,7 +55,7 @@ class AmityTest(TestCase):
         mock_fellow.staff_id = "FL-01"
         mock_fellow.allocated_office = "Narnia"
         mock_fellow.allocated_livingspace = ""
-        with mock.patch("classes.room.LivingSpace") as patched_livingspace:
+        with mock.patch("classes.room.LivingSpace"):
             Amity.create_room("Python", "livingspace")
         self.assertEqual(mock_fellow.allocated_livingspace, "")
         Amity.assign_livingspace(mock_fellow)
@@ -66,9 +66,9 @@ class AmityTest(TestCase):
     def test_cant_assign_office_full(self, input):
         #test that new people cant be randomly assigned to full rooms
         #the save function in person automatically calls the assign room function
-        with mock.patch("classes.room.Office") as patched_office: 
+        with mock.patch("classes.room.Office"): 
             Amity.create_room("Oculus", "office")
-            with mock.patch("classes.person.Staff") as patched_staff:
+            with mock.patch("classes.person.Staff"):
                 Amity.offices["Oculus"].current_occupants = ["Rehema Tadaa",
                 "Ruth Tadaa", "Arnold Tadaa", "Whitney Tadaa", "Kimani Tadaa", "Migwi T"]
                 result = Amity.add_person("Samuel", "Gaamuwa", "STAFF")
