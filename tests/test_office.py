@@ -1,18 +1,13 @@
 import unittest
 
+from classes.room import Office
 
-class Office_Test(unittest.TestCase):
-    
-    def setup(self):
-        pass
-    
-    def test_instance_of(self):
-        obj = Office()
-        self.assertIsInstance(obj, Office)
+
+class OfficeTest(unittest.TestCase):
     
     def test_object_of(self):
-        obj = Office()
-        self.assertEqual(True, type(obj) is Office)
+        obj = Office("name")
+        self.assertTrue(type(obj) is Office)
 
 
 if __name__ == '__main__':

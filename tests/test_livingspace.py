@@ -1,18 +1,14 @@
 import unittest
 
+from classes.room import LivingSpace
 
-class LivingSpace_Test(unittest.TestCase):
-    
-    def setup(self):
-        pass
-    
-    def test_instance_of(self):
-        obj = LivingSpace()
-        self.assertIsInstance(obj, LivingSpace)
+
+class LivingSpaceTest(unittest.TestCase):
     
     def test_object_of(self):
-        obj = LivingSpace()
-        self.assertEqual(True, type(obj) is LivingSpace)
+        obj = LivingSpace("name")
+        self.assertTrue(type(obj) is LivingSpace)
+        
 
 if __name__ == '__main__':
     unittest.main()
